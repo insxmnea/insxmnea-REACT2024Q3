@@ -1,3 +1,11 @@
+@import "./constants/colors.scss";
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -23,11 +31,6 @@ a:hover {
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
