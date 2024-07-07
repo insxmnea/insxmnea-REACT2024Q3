@@ -4,16 +4,16 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Fira Code", monospace;
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
   font-weight: 400;
+  font-size: 16px;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: $gray-text;
+  background-color: $background;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -23,38 +23,27 @@
 
 a {
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+  color: $gray-text;
+  text-decoration: none;
+  cursor: pointer;
 }
 a:hover {
-  color: #535bf2;
-}
-
-body {
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  color: $gray;
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: $black;
+  color: $gray-text;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.05s ease-in-out;
 }
 button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  background-color: $gray;
 }
 
 @media (prefers-color-scheme: light) {

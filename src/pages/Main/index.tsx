@@ -4,6 +4,7 @@ import { getDeals } from "../../services/api";
 import { Deal } from "../../services/models";
 import DealCard from "../../components/DealCard";
 import SearchBar from "../../components/SearchBar";
+import historyService from "../../services/historyService";
 
 type Props = {};
 
@@ -19,7 +20,7 @@ class Main extends Component<Props, State> {
   };
 
   componentDidMount() {
-    getDeals().then((data) => this.setState({ deals: data }));
+    this.onSearch(historyService.loadHistory()[0]);
   }
 
   onSearch = async (search: string = "") => {
@@ -33,22 +34,25 @@ class Main extends Component<Props, State> {
     }
 
     return (
-      <>
-        <div>Main</div>
-        <SearchBar onSearch={this.onSearch} />
+      <div className={styles.wrapper}>
+        <header className={styles.header}>
+          <SearchBar onSearch={this.onSearch} />
 
-        <button
-          onClick={() => {
-            this.setState({ hasError: true });
-          }}
-        >
-          Error
-        </button>
+          <button
+            onClick={() => {
+              this.setState({ hasError: true });
+            }}
+          >
+            Throw error
+          </button>
+        </header>
 
-        {this.state.deals.map((deal) => (
-          <DealCard deal={deal} key={deal.dealID} />
-        ))}
-      </>
+        <div className={styles.deals}>
+          {this.state.deals.map((deal) => (
+            <DealCard deal={deal} key={deal.dealID} />
+          ))}
+        </div>
+      </div>
     );
   }
 }

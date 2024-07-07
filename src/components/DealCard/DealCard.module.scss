@@ -10,12 +10,11 @@
   box-shadow: $shadow;
   background-color: $gray-dark;
   color: $gray-text;
-  margin-bottom: 20px;
 }
 
 .thumb {
+  align-self: center;
   width: 100%;
-  height: 100%;
   object-fit: cover;
   border-radius: 5px;
 }
