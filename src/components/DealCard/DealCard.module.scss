@@ -5,16 +5,69 @@
   flex-direction: column;
   justify-content: space-between;
   width: 200px;
-  padding: 10px;
   border-radius: 5px;
   box-shadow: $shadow;
   background-color: $gray-dark;
   color: $gray-text;
+  overflow: hidden;
+}
+
+.thumbContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 70px;
+  border-bottom: 1px solid $gray-text;
 }
 
 .thumb {
-  align-self: center;
   width: 100%;
   object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.title {
+  font-size: 16px;
+}
+
+.pricesContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.prices {
+  margin: 10px 0;
+}
+
+.normalPrice {
+  text-decoration: line-through;
+  color: $gray-text;
+  font-size: 10px;
+  margin-left: 4px;
+}
+
+.salePrice {
+  color: $green;
+  font-size: 16px;
+}
+
+.buy {
+  padding: 5px 10px;
   border-radius: 5px;
+  background-color: $gray;
+  color: $gray-text;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: $pivot;
+  }
 }
