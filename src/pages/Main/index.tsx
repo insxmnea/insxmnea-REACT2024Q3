@@ -4,18 +4,19 @@ import { getDeals } from "../../services/api";
 import { Deal } from "../../services/models";
 import DealCard from "../../components/DealCard";
 import SearchBar from "../../components/SearchBar";
-import historyService from "../../services/historyService";
 import Loader from "../../components/Loader";
+import useHistory from "../../hooks/useHistory";
 
 type Props = {};
 
 const Main: FC<Props> = () => {
+  const [history] = useHistory();
   const [deals, setDeals] = useState<Deal[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [noResults, setNoResults] = useState<boolean>(false);
 
   useEffect(() => {
-    onSearch(historyService.loadHistory()[0]);
+    onSearch(history[0]);
 
     if (hasError) {
       throw new Error("!!!");

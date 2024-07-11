@@ -8,18 +8,17 @@ import {
   useEffect,
 } from "react";
 import styles from "./SearchBar.module.scss";
-import historyService from "../../services/historyService";
 import searchIcon from "../../assets/icons/search.svg";
+import useHistory from "../../hooks/useHistory";
+import useSearchQuery from "../../hooks/useSearchQuery";
 
 type Props = {
   onSearch: (search: string) => void;
 };
 
 const SearchBar: FC<Props> = (props) => {
-  const [history, setHistory] = useState<string[]>(
-    historyService.loadHistory()
-  );
-  const [search, setSearch] = useState<string>("");
+  const [history, updateHistory] = useHistory();
+  const [query, setQuery] = useSearchQuery();
   const [showHistory, setShowHistory] = useState<boolean>(false);
 
   const searchBoxRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>();
@@ -43,15 +42,14 @@ const SearchBar: FC<Props> = (props) => {
   }, [searchBoxRef]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
+    setQuery(event.target.value);
   };
 
   const handleButtonClick = (search: string) => {
     props.onSearch(search);
-    const history = historyService.updateHistory(search);
 
-    setHistory(history);
-    setSearch("");
+    updateHistory(search);
+    setQuery("");
     setShowHistory(false);
 
     if (inputRef.current) {
@@ -66,7 +64,7 @@ const SearchBar: FC<Props> = (props) => {
     }
 
     if (event.key === "Enter") {
-      handleButtonClick(search);
+      handleButtonClick(query);
     }
   };
 
@@ -78,13 +76,13 @@ const SearchBar: FC<Props> = (props) => {
         className={styles.input}
         ref={inputRef}
         onChange={handleInputChange}
-        value={search}
+        value={query}
         onFocus={() => setShowHistory(true)}
         onKeyDown={(event) => handleKeyDown(event)}
       />
       <button
         className={styles.button}
-        onClick={() => handleButtonClick(search)}
+        onClick={() => handleButtonClick(query)}
       >
         <img src={searchIcon} className={styles.icon} alt="search icon" />
       </button>
