@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from "./Main.module.scss";
 import { getDeals } from "../../services/api";
 import { Deal } from "../../services/models";
@@ -9,62 +9,53 @@ import Loader from "../../components/Loader";
 
 type Props = {};
 
-type State = {
-  deals: Deal[];
-  hasError: boolean;
-  noResults: boolean;
-};
+const Main: FC<Props> = () => {
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [noResults, setNoResults] = useState<boolean>(false);
 
-class Main extends Component<Props, State> {
-  state: State = {
-    deals: [],
-    hasError: false,
-    noResults: false,
-  };
+  useEffect(() => {
+    onSearch(historyService.loadHistory()[0]);
 
-  componentDidMount() {
-    this.onSearch(historyService.loadHistory()[0]);
-  }
-
-  onSearch = async (search: string = "") => {
-    this.setState({ deals: [], noResults: false });
-    const res = await getDeals(search);
-    this.setState({ deals: res, noResults: res.length === 0 });
-  };
-
-  render() {
-    if (this.state.hasError) {
+    if (hasError) {
       throw new Error("!!!");
     }
+  }, [hasError]);
 
-    return (
-      <div className={styles.wrapper}>
-        <header className={styles.header}>
-          <SearchBar onSearch={this.onSearch} />
+  const onSearch = async (search: string = "") => {
+    setDeals([]);
+    setNoResults(false);
 
-          <button
-            onClick={() => {
-              this.setState({ hasError: true });
-            }}
-          >
-            Throw error
-          </button>
-        </header>
+    const res = await getDeals(search);
+    setDeals(res);
+    setNoResults(res.length === 0);
+  };
 
-        {this.state.deals.length === 0 && !this.state.noResults && <Loader />}
+  return (
+    <div className={styles.wrapper}>
+      <header className={styles.header}>
+        <SearchBar onSearch={onSearch} />
 
-        {this.state.noResults && (
-          <div className={styles.noResults}>Not found</div>
-        )}
+        <button
+          onClick={() => {
+            setHasError(true);
+          }}
+        >
+          Throw error
+        </button>
+      </header>
 
-        <div className={styles.deals}>
-          {this.state.deals.map((deal) => (
-            <DealCard deal={deal} key={deal.dealID} />
-          ))}
-        </div>
+      {deals.length === 0 && !noResults && <Loader />}
+
+      {noResults && <div className={styles.noResults}>Not found</div>}
+
+      <div className={styles.deals}>
+        {deals.map((deal) => (
+          <DealCard deal={deal} key={deal.dealID} />
+        ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Main;
