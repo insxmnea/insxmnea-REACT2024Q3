@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Deal } from "../../services/models";
-import styles from "./DealCard.module.scss";
+import styles from "./Card.module.scss";
 
 type Props = {
   deal: Deal;
 };
 
-const DealCard: FC<Props> = (props) => {
+const Card: FC<Props> = (props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.thumbContainer}>
@@ -34,4 +34,4 @@ const DealCard: FC<Props> = (props) => {
   );
 };
 
-export default DealCard;
+export default Card;
