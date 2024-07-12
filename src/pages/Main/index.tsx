@@ -5,6 +5,7 @@ import { Deal } from "../../services/models";
 import SearchBar from "../../components/SearchBar";
 import useHistory from "../../hooks/useHistory";
 import CardList from "../../components/CardList";
+import Pagination from "../../components/Pagination";
 
 type Props = {};
 
@@ -13,6 +14,7 @@ const Main: FC<Props> = () => {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     onSearch(history[0]);
@@ -45,7 +47,16 @@ const Main: FC<Props> = () => {
         </button>
       </header>
 
+      <div className={styles.title}>Search results for: {history[0]}</div>
+
       <CardList deals={deals} isFetching={isFetching} />
+      <div className={styles.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          totalPageCount={10}
+        />
+      </div>
     </div>
   );
 };

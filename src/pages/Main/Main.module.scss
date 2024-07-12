@@ -3,6 +3,8 @@
 .wrapper {
   width: 100%;
   max-width: 1200px;
+  box-sizing: border-box;
+  padding: 20px;
   margin: 0 auto;
 }
 
@@ -10,5 +12,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
+}
+
+.title {
+  margin-top: 20px;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
