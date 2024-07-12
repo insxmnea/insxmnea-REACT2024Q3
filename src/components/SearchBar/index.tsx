@@ -9,15 +9,14 @@ import {
 } from "react";
 import styles from "./SearchBar.module.scss";
 import searchIcon from "../../assets/icons/search.svg";
-import useHistory from "../../hooks/useHistory";
 import useSearchQuery from "../../hooks/useSearchQuery";
 
 type Props = {
+  history: string[];
   onSearch: (search: string) => void;
 };
 
 const SearchBar: FC<Props> = (props) => {
-  const [history, updateHistory] = useHistory();
   const [query, setQuery] = useSearchQuery();
   const [showHistory, setShowHistory] = useState<boolean>(false);
 
@@ -48,7 +47,6 @@ const SearchBar: FC<Props> = (props) => {
   const handleButtonClick = (search: string) => {
     props.onSearch(search);
 
-    updateHistory(search);
     setQuery("");
     setShowHistory(false);
 
@@ -87,17 +85,21 @@ const SearchBar: FC<Props> = (props) => {
         <img src={searchIcon} className={styles.icon} alt="search icon" />
       </button>
 
-      {history.length > 0 && showHistory && (
+      {props.history.length > 0 && showHistory && (
         <div className={styles.history}>
-          {history.map((value) => (
-            <div
-              className={styles.historyItem}
-              key={value.split(" ").join("-")}
-              onClick={() => handleButtonClick(value)}
-            >
-              {value}
-            </div>
-          ))}
+          {props.history.map((value) => {
+            if (value.trim() === "") return null;
+
+            return (
+              <div
+                className={styles.historyItem}
+                key={value.split(" ").join("-")}
+                onClick={() => handleButtonClick(value)}
+              >
+                {value}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

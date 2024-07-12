@@ -8,12 +8,8 @@ const useHistory = () => {
   });
 
   const updateHistory = useCallback((query: string) => {
-    if (query.trim() === "") {
-      return;
-    }
-
     const newHistory = history.filter((item) => item !== query);
-    newHistory.unshift(query);
+    newHistory.unshift(query.trim());
     if (newHistory.length > 10) {
       newHistory.pop();
     }
