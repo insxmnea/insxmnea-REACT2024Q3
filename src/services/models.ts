@@ -20,4 +20,9 @@ type Deal = {
   title: string;
 };
 
-export type { Deal };
+type Deals = {
+  totalPageCount: number;
+  deals: Deal[];
+};
+
+export type { Deal, Deals };

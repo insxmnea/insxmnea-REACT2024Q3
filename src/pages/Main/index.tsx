@@ -15,21 +15,24 @@ const Main: FC<Props> = () => {
   const [hasError, setHasError] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPageCount, setTotalPageCount] = useState<number>(0);
 
   useEffect(() => {
-    onSearch(history[0]);
+    onSearch(history[0], currentPage);
 
     if (hasError) {
       throw new Error("!!!");
     }
-  }, [hasError]);
+  }, [hasError, currentPage, history]);
 
-  const onSearch = async (search: string = "") => {
+  const onSearch = async (search: string = "", page: number = 1) => {
     setIsFetching(true);
     setDeals([]);
+    setTotalPageCount(0);
 
-    const res = await getDeals(search);
-    setDeals(res);
+    const res = await getDeals(search, page - 1);
+    setDeals(res.deals);
+    setTotalPageCount(res.totalPageCount);
     setIsFetching(false);
   };
 
@@ -54,7 +57,7 @@ const Main: FC<Props> = () => {
         <Pagination
           currentPage={currentPage}
           onPageChange={(page) => setCurrentPage(page)}
-          totalPageCount={10}
+          totalPageCount={totalPageCount}
         />
       </div>
     </div>
