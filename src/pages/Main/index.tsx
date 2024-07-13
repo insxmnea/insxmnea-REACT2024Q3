@@ -6,22 +6,20 @@ import SearchBar from "../../components/SearchBar";
 import useHistory from "../../hooks/useHistory";
 import CardList from "../../components/CardList";
 import Pagination from "../../components/Pagination";
-import { useSearchParams } from "react-router-dom";
+import { Outlet, useSearchParams } from "react-router-dom";
 import DetailedCard from "../../components/DetailedCard";
 
 type Props = {};
 
 const Main: FC<Props> = () => {
   const [history, updateHistory] = useHistory();
+
   const [deals, setDeals] = useState<Deal[]>([]);
   const [hasError, setHasError] = useState<boolean>(false);
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [totalPageCount, setTotalPageCount] = useState<number>(0);
 
-  const [searchParams, setSearchParams] = useSearchParams({
-    title: "",
-    pageNumber: "1",
-  });
+  const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("pageNumber")) || 1;
   const title = searchParams.get("title") || history[0] || "";
 
@@ -29,50 +27,44 @@ const Main: FC<Props> = () => {
   const [detailedCardId, setDetailedCardId] = useState<string>("");
 
   useEffect(() => {
-    if (hasError) {
-      throw new Error("!!!");
-    }
-
     if (isDetailsOpen && !detailedCardId) {
       setSearchParams((params) => {
         params.set("details", "0");
         return params;
       });
     }
+  }, []);
 
-    onSearch(title, currentPage);
-  }, [hasError, currentPage, title]);
-
-  const onSearch = async (search: string = "", page: number = 1) => {
-    if (isFetching) return;
+  const fetchData = async () => {
     setIsFetching(true);
-    setDeals([]);
-
-    if (history[0] !== search) {
-      setTotalPageCount(0);
-      updateHistory(search);
-
-      setSearchParams((params) => {
-        params.set("title", search);
-        params.set("pageNumber", "1");
-        return params;
-      });
-    }
 
     try {
-      const data = await getDeals(search, page - 1);
+      const data = await getDeals(title, currentPage - 1);
       setDeals(data.deals);
       setTotalPageCount(data.totalPageCount);
     } catch (error) {
       console.error("Failed to fetch deals:", error);
     } finally {
       setIsFetching(false);
-      setSearchParams((params) => {
-        params.set("title", search);
-        params.set("pageNumber", page.toString());
-        return params;
-      });
     }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, title]);
+
+  const onSearch = async (search: string = "", page: number = 1) => {
+    updateHistory(search);
+
+    if (history[0] !== search) {
+      setTotalPageCount(0);
+    }
+
+    setSearchParams((params) => {
+      params.set("title", search);
+      params.set("pageNumber", page.toString());
+      return params;
+    });
   };
 
   const handleCardClick = (id: string) => {
@@ -83,6 +75,10 @@ const Main: FC<Props> = () => {
       return params;
     });
   };
+
+  if (hasError) {
+    throw new Error("!!!");
+  }
 
   return (
     <div className={styles.wrapper}>
@@ -98,9 +94,7 @@ const Main: FC<Props> = () => {
         </button>
       </header>
 
-      {history[0] && (
-        <div className={styles.title}>Search results for: {history[0]}</div>
-      )}
+      {title && <div className={styles.title}>Search results for: {title}</div>}
 
       <div className={styles.content}>
         <div className={styles.list}>
@@ -123,6 +117,7 @@ const Main: FC<Props> = () => {
             />
           </div>
         </div>
+        <Outlet />
 
         {isDetailsOpen && detailedCardId && (
           <DetailedCard

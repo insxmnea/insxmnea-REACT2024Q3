@@ -11,11 +11,13 @@ type Props = {
 };
 
 const CardList: FC<Props> = (props) => {
+  if (props.isFetching) {
+    return <Loader />;
+  }
+
   return (
     <>
-      {props.isFetching && <Loader />}
-
-      {!props.isFetching && !props.deals.length ? (
+      {!props.deals.length ? (
         <div className={styles.noResults}>No results</div>
       ) : (
         <div className={styles.deals}>
