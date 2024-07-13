@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { Deal } from "../../services/models";
 import styles from "./Card.module.scss";
+import { truncate } from "../../utils/helper";
 
 type Props = {
   deal: Deal;
@@ -18,7 +19,7 @@ const Card: FC<Props> = (props) => {
       </div>
 
       <div className={styles.info}>
-        <span>{props.deal.title}</span>
+        <span>{truncate(props.deal.title, 22)}</span>
         <div className={styles.pricesContainer}>
           <div className={styles.prices}>
             <span className={styles.salePrice}>{props.deal.salePrice}$</span>
