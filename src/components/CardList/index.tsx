@@ -16,7 +16,7 @@ const CardList: FC<Props> = (props) => {
       {props.isFetching && <Loader />}
 
       {!props.isFetching && !props.deals.length ? (
-        <div className={styles.noResults}>Not found</div>
+        <div className={styles.noResults}>No results</div>
       ) : (
         <div className={styles.deals}>
           {props.deals.map((deal) => (
