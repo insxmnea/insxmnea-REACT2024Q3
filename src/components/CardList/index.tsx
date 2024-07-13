@@ -7,19 +7,26 @@ import Loader from "../Loader";
 type Props = {
   deals: Deal[];
   isFetching: boolean;
+  handleCardClick: (id: string) => void;
 };
 
-const CardList: FC<Props> = ({ deals, isFetching }) => {
+const CardList: FC<Props> = (props) => {
   return (
     <>
-      {isFetching && <Loader />}
+      {props.isFetching && <Loader />}
 
-      {!isFetching && !deals.length ? (
+      {!props.isFetching && !props.deals.length ? (
         <div className={styles.noResults}>Not found</div>
       ) : (
         <div className={styles.deals}>
-          {deals.map((deal) => (
-            <Card deal={deal} key={deal.dealID} />
+          {props.deals.map((deal) => (
+            <Card
+              deal={deal}
+              key={deal.dealID}
+              handleCardClick={(id) => {
+                props.handleCardClick(id);
+              }}
+            />
           ))}
         </div>
       )}

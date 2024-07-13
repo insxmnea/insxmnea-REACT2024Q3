@@ -4,11 +4,15 @@ import styles from "./Card.module.scss";
 
 type Props = {
   deal: Deal;
+  handleCardClick: (id: string) => void;
 };
 
 const Card: FC<Props> = (props) => {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      onClick={() => props.handleCardClick(props.deal.dealID)}
+    >
       <div className={styles.thumbContainer}>
         <img className={styles.thumb} src={props.deal.thumb} />
       </div>
@@ -25,6 +29,8 @@ const Card: FC<Props> = (props) => {
           <a
             className={styles.buy}
             href={`https://store.steampowered.com/app/${props.deal.steamAppID}`}
+            target="_blank"
+            onClick={(e) => e.stopPropagation()}
           >
             Buy
           </a>

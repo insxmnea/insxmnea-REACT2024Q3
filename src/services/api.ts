@@ -1,4 +1,4 @@
-import { Deals } from "./models";
+import { CardInfo, Deals } from "./models";
 
 const URL = "https://www.cheapshark.com/api/1.0";
 
@@ -15,6 +15,11 @@ const api = {
       deals,
     };
   },
+  getDeal: async (id: string): Promise<CardInfo> => {
+    const query = `${URL}/deals?id=${id}`;
+    const response = await fetch(query);
+    return await response.json();
+  },
 };
 
-export const { getDeals } = api;
+export const { getDeals, getDeal } = api;
