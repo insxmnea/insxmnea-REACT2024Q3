@@ -3,28 +3,48 @@ import styles from "./DetailedCard.module.scss";
 import { CardInfo } from "../../services/models";
 import { getDeal } from "../../services/api";
 import Loader from "../Loader";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-type Props = {
-  id: string;
-  hideDetailedCard: () => void;
-};
+type Props = {};
 
-const DetailedCard: FC<Props> = (props) => {
+const DetailedCard: FC<Props> = () => {
   const [cardInfo, setCardInfo] = useState<CardInfo>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
+
   const detailedCardRef: RefObject<HTMLDivElement> =
     createRef<HTMLDivElement>();
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        detailedCardRef.current &&
-        !detailedCardRef.current.contains(event.target as Node)
-      ) {
-        props.hideDetailedCard();
-      }
-    };
+  const [searchParams, setSearchParams] = useSearchParams();
+  const detailedCardId = searchParams.get("id") || "";
 
+  const navigate = useNavigate();
+
+  const hideDetailedCard = () => {
+    setSearchParams((params) => {
+      params.delete("id");
+      return params;
+    });
+
+    navigate(
+      {
+        pathname: "/insxmnea-REACT2024Q3/",
+        search: searchParams.toString(),
+      },
+      { replace: true }
+    );
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      event.button === 0 &&
+      detailedCardRef.current &&
+      !detailedCardRef.current.contains(event.target as Node)
+    ) {
+      hideDetailedCard();
+    }
+  };
+
+  useEffect(() => {
     document.addEventListener("mouseup", handleClickOutside);
 
     return () => {
@@ -33,8 +53,8 @@ const DetailedCard: FC<Props> = (props) => {
   }, [detailedCardRef]);
 
   useEffect(() => {
-    onOpen(props.id);
-  }, [props.id]);
+    onOpen(detailedCardId);
+  }, [detailedCardId]);
 
   const onOpen = async (id: string) => {
     setIsFetching(true);
@@ -49,12 +69,20 @@ const DetailedCard: FC<Props> = (props) => {
     }
   };
 
+  if (isFetching) {
+    return (
+      <div className={styles.wrapper}>
+        <div className={styles.container} ref={detailedCardRef}>
+          <Loader />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} ref={detailedCardRef}>
-        {isFetching && <Loader />}
-
-        {!isFetching && cardInfo && (
+        {cardInfo?.gameInfo ? (
           <>
             <span className={styles.title}>{cardInfo.gameInfo.name}</span>
             <div className={styles.thumbContainer}>
@@ -83,13 +111,20 @@ const DetailedCard: FC<Props> = (props) => {
                 </a>
                 <button
                   className={styles.close}
-                  onClick={() => props.hideDetailedCard()}
+                  onClick={() => hideDetailedCard()}
                 >
                   Close
                 </button>
               </div>
             </div>
           </>
+        ) : (
+          <div>
+            <span className={styles.noResults}>No results</span>
+            <button className={styles.close} onClick={() => hideDetailedCard()}>
+              Close
+            </button>
+          </div>
         )}
       </div>
     </div>

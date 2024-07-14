@@ -2,17 +2,35 @@ import { FC } from "react";
 import { Deal } from "../../services/models";
 import styles from "./Card.module.scss";
 import { truncate } from "../../utils/helper";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 type Props = {
   deal: Deal;
-  handleCardClick: (id: string) => void;
 };
 
 const Card: FC<Props> = (props) => {
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const handleCardClick = (id: string) => {
+    setSearchParams((params) => {
+      params.set("id", id);
+      return params;
+    });
+
+    navigate(
+      {
+        pathname: "/insxmnea-REACT2024Q3/details",
+        search: searchParams.toString(),
+      },
+      { replace: true }
+    );
+  };
+
   return (
     <div
       className={styles.wrapper}
-      onClick={() => props.handleCardClick(props.deal.dealID)}
+      onClick={() => handleCardClick(props.deal.dealID)}
     >
       <div className={styles.thumbContainer}>
         <img className={styles.thumb} src={props.deal.thumb} />

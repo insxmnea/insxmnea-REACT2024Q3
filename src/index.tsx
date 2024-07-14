@@ -5,6 +5,7 @@ import Main from "./pages/Main/index.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./pages/NotFound/index.tsx";
 import ErrorBoundaryLayout from "./components/ErrorBoundaryLayout/index.tsx";
+import DetailedCard from "./components/DetailedCard/index.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ const router = createBrowserRouter([
       {
         path: "/insxmnea-REACT2024Q3/",
         element: <Main />,
+        children: [{ path: "details", element: <DetailedCard /> }],
       },
       {
         path: "*",

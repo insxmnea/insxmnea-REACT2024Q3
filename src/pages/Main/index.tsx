@@ -7,7 +7,6 @@ import useHistory from "../../hooks/useHistory";
 import CardList from "../../components/CardList";
 import Pagination from "../../components/Pagination";
 import { Outlet, useSearchParams } from "react-router-dom";
-import DetailedCard from "../../components/DetailedCard";
 
 type Props = {};
 
@@ -22,18 +21,6 @@ const Main: FC<Props> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("pageNumber")) || 1;
   const title = searchParams.get("title") || history[0] || "";
-
-  const isDetailsOpen = Boolean(Number(searchParams.get("details"))) || false;
-  const [detailedCardId, setDetailedCardId] = useState<string>("");
-
-  useEffect(() => {
-    if (isDetailsOpen && !detailedCardId) {
-      setSearchParams((params) => {
-        params.set("details", "0");
-        return params;
-      });
-    }
-  }, []);
 
   const fetchData = async () => {
     setIsFetching(true);
@@ -67,15 +54,6 @@ const Main: FC<Props> = () => {
     });
   };
 
-  const handleCardClick = (id: string) => {
-    setDetailedCardId(id);
-
-    setSearchParams((params) => {
-      params.set("details", "1");
-      return params;
-    });
-  };
-
   if (hasError) {
     throw new Error("!!!");
   }
@@ -98,11 +76,7 @@ const Main: FC<Props> = () => {
 
       <div className={styles.content}>
         <div className={styles.list}>
-          <CardList
-            deals={deals}
-            isFetching={isFetching}
-            handleCardClick={handleCardClick}
-          />
+          <CardList deals={deals} isFetching={isFetching} />
 
           <div className={styles.pagination}>
             <Pagination
@@ -117,19 +91,8 @@ const Main: FC<Props> = () => {
             />
           </div>
         </div>
-        <Outlet />
 
-        {isDetailsOpen && detailedCardId && (
-          <DetailedCard
-            id={detailedCardId}
-            hideDetailedCard={() =>
-              setSearchParams((params) => {
-                params.set("details", "0");
-                return params;
-              })
-            }
-          />
-        )}
+        <Outlet />
       </div>
     </div>
   );

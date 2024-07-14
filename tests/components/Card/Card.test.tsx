@@ -1,10 +1,20 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Deal } from "../../../src/services/models";
 import Card from "../../../src/components/Card";
+import { BrowserRouter } from "react-router-dom";
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual: typeof importOriginal = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 const deal: Deal = {
-  dealID: "G%2BXAA0GGjaN4wXzRSpEpKtspbGp%2Bz3TJoNnhJI72Bug%3D",
+  dealID: "1",
   dealRating: "0.0",
   gameID: "75",
   internalName: "HALFLIFE",
@@ -28,7 +38,11 @@ const deal: Deal = {
 
 describe("Tests for the Card component", () => {
   it("Ensure that the card component renders the relevant card data", () => {
-    render(<Card deal={deal} handleCardClick={() => {}} />);
+    render(
+      <BrowserRouter>
+        <Card deal={deal} />
+      </BrowserRouter>
+    );
 
     expect(screen.getByText(deal.title)).toBeInTheDocument();
     expect(screen.getByText(`${deal.salePrice}$`)).toBeInTheDocument();
@@ -36,21 +50,23 @@ describe("Tests for the Card component", () => {
     expect(screen.getByRole("img")).toHaveAttribute("src", deal.thumb);
   });
 
-  it("Validate that clicking on a card opens a detailed card component", () => {
-    const handleCardClick = vi.fn();
-    render(<Card deal={deal} handleCardClick={handleCardClick} />);
-
-    fireEvent.click(screen.getByRole("img"));
-    expect(handleCardClick).toHaveBeenCalledWith(deal.dealID);
-  });
-
-  it("Check that clicking triggers an additional API call to fetch detailed information", async () => {
-    const handleCardClick = vi.fn();
-    render(<Card deal={deal} handleCardClick={handleCardClick} />);
+  it("Validate that clicking on a card opens a detailed card component", async () => {
+    render(
+      <BrowserRouter>
+        <Card deal={deal} />
+      </BrowserRouter>
+    );
 
     fireEvent.click(screen.getByRole("img"));
 
-    expect(handleCardClick).toHaveBeenCalled();
-    expect(handleCardClick).toHaveBeenCalledWith(deal.dealID);
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith(
+        {
+          pathname: "/insxmnea-REACT2024Q3/details",
+          search: "id=1",
+        },
+        { replace: true }
+      );
+    });
   });
 });

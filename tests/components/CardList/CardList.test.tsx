@@ -1,7 +1,8 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { Deal } from "../../../src/services/models";
 import { render, screen } from "@testing-library/react";
 import CardList from "../../../src/components/CardList";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Tests for the CardList component", () => {
   it("Verify that the component renders the specified number of cards", () => {
@@ -51,14 +52,11 @@ describe("Tests for the CardList component", () => {
         title: "Half-Life 2",
       },
     ];
-    const handleCardClick = vi.fn();
 
     render(
-      <CardList
-        deals={deals}
-        isFetching={false}
-        handleCardClick={handleCardClick}
-      />
+      <BrowserRouter>
+        <CardList deals={deals} isFetching={false} />
+      </BrowserRouter>
     );
 
     const cards = screen.getAllByRole("img");
@@ -67,14 +65,11 @@ describe("Tests for the CardList component", () => {
 
   it("Check that an appropriate message is displayed if no cards are present", () => {
     const deals: Deal[] = [];
-    const handleCardClick = vi.fn();
 
     render(
-      <CardList
-        deals={deals}
-        isFetching={false}
-        handleCardClick={handleCardClick}
-      />
+      <BrowserRouter>
+        <CardList deals={deals} isFetching={false} />
+      </BrowserRouter>
     );
 
     const noResultsMessage = screen.getByText(/No results/i);

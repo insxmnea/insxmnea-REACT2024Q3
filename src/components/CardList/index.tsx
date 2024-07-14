@@ -7,7 +7,6 @@ import Loader from "../Loader";
 type Props = {
   deals: Deal[];
   isFetching: boolean;
-  handleCardClick: (id: string) => void;
 };
 
 const CardList: FC<Props> = (props) => {
@@ -22,13 +21,7 @@ const CardList: FC<Props> = (props) => {
       ) : (
         <div className={styles.deals}>
           {props.deals.map((deal) => (
-            <Card
-              deal={deal}
-              key={deal.dealID}
-              handleCardClick={(id) => {
-                props.handleCardClick(id);
-              }}
-            />
+            <Card deal={deal} key={deal.dealID} />
           ))}
         </div>
       )}

@@ -31,10 +31,8 @@ describe("Pagination component", () => {
       />
     );
 
-    // Click on the next page button
     fireEvent.click(screen.getByTestId("next"));
 
-    // Check if onPageChange was called with the correct arguments
     expect(onPageChange).toHaveBeenCalledWith(currentPage + 1);
   });
 });

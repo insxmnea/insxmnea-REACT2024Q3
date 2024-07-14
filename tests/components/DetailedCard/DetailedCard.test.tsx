@@ -2,6 +2,16 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { CardInfo } from "../../../src/services/models";
 import { render, waitFor, screen, fireEvent } from "@testing-library/react";
 import DetailedCard from "../../../src/components/DetailedCard";
+import { BrowserRouter } from "react-router-dom";
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async (importOriginal) => {
+  const actual: typeof importOriginal = await importOriginal();
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 const cardInfo: CardInfo = {
   cheapestPrice: {
@@ -41,7 +51,11 @@ describe("Tests for the DetailedCard component", () => {
       } as Response);
     });
 
-    render(<DetailedCard id="1" hideDetailedCard={vi.fn()} />);
+    render(
+      <BrowserRouter>
+        <DetailedCard />
+      </BrowserRouter>
+    );
 
     expect(screen.getByTestId("loader")).toBeInTheDocument();
 
@@ -58,7 +72,11 @@ describe("Tests for the DetailedCard component", () => {
       } as Response);
     });
 
-    render(<DetailedCard id="1" hideDetailedCard={vi.fn()} />);
+    render(
+      <BrowserRouter>
+        <DetailedCard />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(cardInfo.gameInfo.name)).toBeInTheDocument();
@@ -88,9 +106,12 @@ describe("Tests for the DetailedCard component", () => {
         json: () => Promise.resolve(cardInfo),
       } as Response);
     });
-    const hideDetailedCard = vi.fn();
 
-    render(<DetailedCard id="1" hideDetailedCard={hideDetailedCard} />);
+    render(
+      <BrowserRouter>
+        <DetailedCard />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(cardInfo.gameInfo.name)).toBeInTheDocument();
@@ -98,6 +119,14 @@ describe("Tests for the DetailedCard component", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /close/i }));
 
-    expect(hideDetailedCard).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith(
+        {
+          pathname: "/insxmnea-REACT2024Q3/",
+          search: "",
+        },
+        { replace: true }
+      );
+    });
   });
 });
