@@ -64,7 +64,7 @@ const Pagination: FC<Props> = (props) => {
         className={`${styles.paginationItem} ${lastPage === props.currentPage ? styles.disabled : ""}`}
         onClick={onNext}
       >
-        <div className={`${styles.arrow} ${styles.right}`} />
+        <div className={`${styles.arrow} ${styles.right}`} data-testid="next" />
       </li>
     </ul>
   );
