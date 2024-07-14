@@ -47,7 +47,6 @@ const SearchBar: FC<Props> = (props) => {
   const handleButtonClick = (search: string) => {
     props.onSearch(search);
 
-    setQuery("");
     setShowHistory(false);
 
     if (inputRef.current) {
