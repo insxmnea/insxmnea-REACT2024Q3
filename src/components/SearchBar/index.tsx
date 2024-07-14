@@ -1,119 +1,108 @@
 import {
   ChangeEvent,
-  Component,
   createRef,
   RefObject,
   KeyboardEvent,
+  FC,
+  useState,
+  useEffect,
 } from "react";
 import styles from "./SearchBar.module.scss";
-import historyService from "../../services/historyService";
 import searchIcon from "../../assets/icons/search.svg";
+import useSearchQuery from "../../hooks/useSearchQuery";
 
 type Props = {
+  history: string[];
   onSearch: (search: string) => void;
 };
 
-type State = {
-  history: string[];
-  search: string;
-  showHistory: boolean;
-  searchBoxRef: RefObject<HTMLDivElement>;
-  inputRef: RefObject<HTMLInputElement>;
-};
+const SearchBar: FC<Props> = (props) => {
+  const [query, setQuery] = useSearchQuery();
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
-class SearchBar extends Component<Props, State> {
-  state = {
-    searchBoxRef: createRef<HTMLDivElement>(),
-    inputRef: createRef<HTMLInputElement>(),
-    history: historyService.loadHistory(),
-    search: "",
-    showHistory: false,
+  const searchBoxRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>();
+  const inputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBoxRef.current &&
+        !searchBoxRef.current.contains(event.target as Node)
+      ) {
+        setShowHistory(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [searchBoxRef]);
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setQuery(event.target.value);
   };
 
-  componentDidMount() {
-    document.addEventListener("mousedown", this.handleClickOutside);
-  }
+  const handleButtonClick = (search: string) => {
+    props.onSearch(search);
 
-  componentWillUnmount() {
-    document.removeEventListener("mousedown", this.handleClickOutside);
-  }
+    setShowHistory(false);
 
-  handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      search: event.target.value,
-    });
-  };
-
-  handleButtonClick = (search: string) => {
-    this.props.onSearch(search);
-    const history = historyService.updateHistory(search);
-    this.setState({
-      history,
-      search: "",
-      showHistory: false,
-    });
-
-    if (this.state.inputRef.current) {
-      this.state.inputRef.current.blur();
+    if (inputRef.current) {
+      inputRef.current.blur();
     }
   };
 
-  handleClickOutside = (event: MouseEvent) => {
-    if (
-      this.state.searchBoxRef.current &&
-      !this.state.searchBoxRef.current.contains(event.target as Node)
-    ) {
-      this.setState({ showHistory: false });
-    }
-  };
-
-  handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Escape") {
-      this.setState({ showHistory: false });
-      if (this.state.inputRef.current) this.state.inputRef.current.blur();
+      setShowHistory(false);
+      if (inputRef.current) inputRef.current.blur();
     }
 
     if (event.key === "Enter") {
-      this.handleButtonClick(this.state.search);
+      handleButtonClick(query);
     }
   };
 
-  render() {
-    return (
-      <div className={styles.wrapper} ref={this.state.searchBoxRef}>
-        <input
-          type="text"
-          placeholder="Search"
-          className={styles.input}
-          ref={this.state.inputRef}
-          onChange={this.handleInputChange}
-          value={this.state.search}
-          onFocus={() => this.setState({ showHistory: true })}
-          onKeyDown={(event) => this.handleKeyDown(event)}
-        />
-        <button
-          className={styles.button}
-          onClick={() => this.handleButtonClick(this.state.search)}
-        >
-          <img src={searchIcon} className={styles.icon} alt="search icon" />
-        </button>
+  return (
+    <div className={styles.wrapper} ref={searchBoxRef}>
+      <input
+        type="text"
+        placeholder="Search"
+        className={styles.input}
+        ref={inputRef}
+        onChange={handleInputChange}
+        value={query}
+        onFocus={() => setShowHistory(true)}
+        onKeyDown={(event) => handleKeyDown(event)}
+      />
+      <button
+        className={styles.button}
+        onClick={() => handleButtonClick(query)}
+      >
+        <img src={searchIcon} className={styles.icon} alt="search icon" />
+      </button>
 
-        {this.state.history.length > 0 && this.state.showHistory && (
-          <div className={styles.history}>
-            {this.state.history.map((value) => (
+      {props.history.length > 0 && showHistory && (
+        <div className={styles.history}>
+          {props.history.map((value) => {
+            if (value.trim() === "") return null;
+
+            return (
               <div
                 className={styles.historyItem}
                 key={value.split(" ").join("-")}
-                onClick={() => this.handleButtonClick(value)}
+                onClick={() => handleButtonClick(value)}
               >
                 {value}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-}
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default SearchBar;

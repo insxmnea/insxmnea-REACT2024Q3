@@ -1,70 +1,101 @@
-import { Component } from "react";
+import { FC, useEffect, useState } from "react";
 import styles from "./Main.module.scss";
 import { getDeals } from "../../services/api";
 import { Deal } from "../../services/models";
-import DealCard from "../../components/DealCard";
 import SearchBar from "../../components/SearchBar";
-import historyService from "../../services/historyService";
-import Loader from "../../components/Loader";
+import useHistory from "../../hooks/useHistory";
+import CardList from "../../components/CardList";
+import Pagination from "../../components/Pagination";
+import { Outlet, useSearchParams } from "react-router-dom";
 
 type Props = {};
 
-type State = {
-  deals: Deal[];
-  hasError: boolean;
-  noResults: boolean;
-};
+const Main: FC<Props> = () => {
+  const [history, updateHistory] = useHistory();
 
-class Main extends Component<Props, State> {
-  state: State = {
-    deals: [],
-    hasError: false,
-    noResults: false,
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [hasError, setHasError] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [totalPageCount, setTotalPageCount] = useState<number>(0);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("pageNumber")) || 1;
+  const title = searchParams.get("title") || history[0] || "";
+
+  const fetchData = async () => {
+    setIsFetching(true);
+
+    try {
+      const data = await getDeals(title, currentPage - 1);
+      setDeals(data.deals);
+      setTotalPageCount(data.totalPageCount);
+    } catch (error) {
+      console.error("Failed to fetch deals:", error);
+    } finally {
+      setIsFetching(false);
+    }
   };
 
-  componentDidMount() {
-    this.onSearch(historyService.loadHistory()[0]);
-  }
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, title]);
 
-  onSearch = async (search: string = "") => {
-    this.setState({ deals: [], noResults: false });
-    const res = await getDeals(search);
-    this.setState({ deals: res, noResults: res.length === 0 });
-  };
+  const onSearch = async (search: string = "", page: number = 1) => {
+    updateHistory(search);
 
-  render() {
-    if (this.state.hasError) {
-      throw new Error("!!!");
+    if (history[0] !== search) {
+      setTotalPageCount(0);
     }
 
-    return (
-      <div className={styles.wrapper}>
-        <header className={styles.header}>
-          <SearchBar onSearch={this.onSearch} />
+    setSearchParams((params) => {
+      params.set("title", search);
+      params.set("pageNumber", page.toString());
+      return params;
+    });
+  };
 
-          <button
-            onClick={() => {
-              this.setState({ hasError: true });
-            }}
-          >
-            Throw error
-          </button>
-        </header>
-
-        {this.state.deals.length === 0 && !this.state.noResults && <Loader />}
-
-        {this.state.noResults && (
-          <div className={styles.noResults}>Not found</div>
-        )}
-
-        <div className={styles.deals}>
-          {this.state.deals.map((deal) => (
-            <DealCard deal={deal} key={deal.dealID} />
-          ))}
-        </div>
-      </div>
-    );
+  if (hasError) {
+    throw new Error("!!!");
   }
-}
+
+  return (
+    <div className={styles.wrapper}>
+      <header className={styles.header}>
+        <SearchBar history={history} onSearch={onSearch} />
+
+        <button
+          onClick={() => {
+            setHasError(true);
+          }}
+        >
+          Throw error
+        </button>
+      </header>
+
+      {title && <div className={styles.title}>Search results for: {title}</div>}
+
+      <div className={styles.content}>
+        <div className={styles.list}>
+          <CardList deals={deals} isFetching={isFetching} />
+
+          <div className={styles.pagination}>
+            <Pagination
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                setSearchParams((params) => {
+                  params.set("pageNumber", page.toString());
+                  return params;
+                });
+              }}
+              totalPageCount={totalPageCount + 1}
+            />
+          </div>
+        </div>
+
+        <Outlet />
+      </div>
+    </div>
+  );
+};
 
 export default Main;

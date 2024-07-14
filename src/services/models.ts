@@ -20,4 +20,36 @@ type Deal = {
   title: string;
 };
 
-export type { Deal };
+type Deals = {
+  totalPageCount: number;
+  deals: Deal[];
+};
+
+type CheapestPrice = {
+  date: number;
+  price: string;
+};
+
+type GameInfo = Omit<
+  Deal,
+  | "dealID"
+  | "dealRating"
+  | "internalName"
+  | "isOnSale"
+  | "lastChange"
+  | "normalPrice"
+  | "savings"
+  | "title"
+> & {
+  name: string;
+  publisher: string;
+  retailPrice: string;
+  steamworks: string;
+};
+
+type CardInfo = {
+  cheapestPrice: CheapestPrice;
+  gameInfo: GameInfo;
+};
+
+export type { Deal, Deals, CardInfo };

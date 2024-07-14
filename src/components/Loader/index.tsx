@@ -1,14 +1,12 @@
-import { Component } from "react";
+import { FC } from "react";
 import styles from "./Loader.module.scss";
 
-class Loader extends Component {
-  render() {
-    return (
-      <div className={styles.wrapper}>
-        <span className={styles.loader}></span>
-      </div>
-    );
-  }
-}
+const Loader: FC = () => {
+  return (
+    <div className={styles.wrapper}>
+      <span className={styles.loader} data-testid="loader"></span>
+    </div>
+  );
+};
 
 export default Loader;
