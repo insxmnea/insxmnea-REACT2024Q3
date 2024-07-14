@@ -1,7 +1,7 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it } from "vitest";
-import DealCard from "../../../src/components/Card";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 import { Deal } from "../../../src/services/models";
+import Card from "../../../src/components/Card";
 
 const deal: Deal = {
   dealID: "G%2BXAA0GGjaN4wXzRSpEpKtspbGp%2Bz3TJoNnhJI72Bug%3D",
@@ -12,7 +12,7 @@ const deal: Deal = {
   lastChange: 1720720626,
   metacriticLink: "/game/half-life/",
   metacriticScore: "96",
-  normalPrice: "9.99",
+  normalPrice: "0.99",
   releaseDate: 911433600,
   salePrice: "9.99",
   savings: "0.000000",
@@ -28,8 +28,29 @@ const deal: Deal = {
 
 describe("Tests for the Card component", () => {
   it("Ensure that the card component renders the relevant card data", () => {
-    render(<DealCard deal={deal} />);
+    render(<Card deal={deal} handleCardClick={() => {}} />);
 
-    screen.debug();
+    expect(screen.getByText(deal.title)).toBeInTheDocument();
+    expect(screen.getByText(`${deal.salePrice}$`)).toBeInTheDocument();
+    expect(screen.getByText(`${deal.normalPrice}$`)).toBeInTheDocument();
+    expect(screen.getByRole("img")).toHaveAttribute("src", deal.thumb);
+  });
+
+  it("Validate that clicking on a card opens a detailed card component", () => {
+    const handleCardClick = vi.fn();
+    render(<Card deal={deal} handleCardClick={handleCardClick} />);
+
+    fireEvent.click(screen.getByRole("img"));
+    expect(handleCardClick).toHaveBeenCalledWith(deal.dealID);
+  });
+
+  it("Check that clicking triggers an additional API call to fetch detailed information", async () => {
+    const handleCardClick = vi.fn();
+    render(<Card deal={deal} handleCardClick={handleCardClick} />);
+
+    fireEvent.click(screen.getByRole("img"));
+
+    expect(handleCardClick).toHaveBeenCalled();
+    expect(handleCardClick).toHaveBeenCalledWith(deal.dealID);
   });
 });
