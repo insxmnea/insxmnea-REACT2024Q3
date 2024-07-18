@@ -2,35 +2,23 @@ import { FC } from "react";
 import { Deal } from "../../services/models";
 import styles from "./Card.module.scss";
 import { truncate } from "../../utils/helper";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 type Props = {
   deal: Deal;
 };
 
 const Card: FC<Props> = (props) => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const handleCardClick = (id: string) => {
-    setSearchParams((params) => {
-      params.set("id", id);
-      return params;
-    });
-
-    navigate(
-      {
-        pathname: "/insxmnea-REACT2024Q3/details",
-        search: searchParams.toString(),
-      },
-      { replace: true }
-    );
-  };
+  const currencyFormat = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
 
   return (
-    <div
+    <Link
+      to={`/insxmnea-REACT2024Q3/details?id=${props.deal.dealID}&${searchParams.toString()}`}
       className={styles.wrapper}
-      onClick={() => handleCardClick(props.deal.dealID)}
     >
       <div className={styles.thumbContainer}>
         <img className={styles.thumb} src={props.deal.thumb} />
@@ -38,24 +26,17 @@ const Card: FC<Props> = (props) => {
 
       <div className={styles.info}>
         <span>{truncate(props.deal.title, 22)}</span>
-        <div className={styles.pricesContainer}>
-          <div className={styles.prices}>
-            <span className={styles.salePrice}>{props.deal.salePrice}$</span>
-            <span className={styles.normalPrice}>
-              {props.deal.normalPrice}$
-            </span>
-          </div>
-          <a
-            className={styles.buy}
-            href={`https://store.steampowered.com/app/${props.deal.steamAppID}`}
-            target="_blank"
-            onClick={(e) => e.stopPropagation()}
-          >
-            Buy
-          </a>
+
+        <div className={styles.prices}>
+          <span className={styles.salePrice}>
+            {currencyFormat.format(Number(props.deal.salePrice))}
+          </span>
+          <span className={styles.normalPrice}>
+            {currencyFormat.format(Number(props.deal.normalPrice))}
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

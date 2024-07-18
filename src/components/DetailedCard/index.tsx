@@ -53,7 +53,7 @@ const DetailedCard: FC<Props> = () => {
   }, [detailedCardRef]);
 
   useEffect(() => {
-    onOpen(detailedCardId);
+    onOpen(encodeURIComponent(detailedCardId));
   }, [detailedCardId]);
 
   const onOpen = async (id: string) => {
@@ -109,10 +109,7 @@ const DetailedCard: FC<Props> = () => {
                 >
                   Buy
                 </a>
-                <button
-                  className={styles.close}
-                  onClick={() => hideDetailedCard()}
-                >
+                <button className={styles.close} onClick={hideDetailedCard}>
                   Close
                 </button>
               </div>
@@ -121,7 +118,7 @@ const DetailedCard: FC<Props> = () => {
         ) : (
           <div>
             <span className={styles.noResults}>No results</span>
-            <button className={styles.close} onClick={() => hideDetailedCard()}>
+            <button className={styles.close} onClick={hideDetailedCard}>
               Close
             </button>
           </div>

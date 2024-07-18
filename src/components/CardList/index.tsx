@@ -1,31 +1,74 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Deal } from "../../services/models";
 import styles from "./CardList.module.scss";
 import Card from "../Card";
 import Loader from "../Loader";
+import Pagination from "../Pagination";
+import { useSearchParams } from "react-router-dom";
+import { getDeals } from "../../services/api";
 
-type Props = {
-  deals: Deal[];
-  isFetching: boolean;
-};
+type Props = {};
 
-const CardList: FC<Props> = (props) => {
-  if (props.isFetching) {
+const CardList: FC<Props> = () => {
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [totalPageCount, setTotalPageCount] = useState<number>(0);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("pageNumber")) || 1;
+  const title = searchParams.get("title") || "";
+
+  const fetchData = async () => {
+    setIsFetching(true);
+
+    try {
+      const data = await getDeals(title, currentPage - 1);
+      setDeals(data.deals);
+      setTotalPageCount(data.totalPageCount);
+    } catch (error) {
+      console.error("Failed to fetch deals:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [currentPage, title]);
+
+  if (isFetching) {
     return <Loader />;
   }
 
   return (
-    <>
-      {!props.deals.length ? (
-        <div className={styles.noResults}>No results</div>
-      ) : (
-        <div className={styles.deals}>
-          {props.deals.map((deal) => (
-            <Card deal={deal} key={deal.dealID} />
-          ))}
-        </div>
-      )}
-    </>
+    <div className={styles.list}>
+      {title && <div className={styles.title}>Search results for: {title}</div>}
+
+      <ul>
+        {!deals.length ? (
+          <li className={styles.noResults}>No results</li>
+        ) : (
+          <li className={styles.deals}>
+            {deals.map((deal) => (
+              <Card deal={deal} key={deal.dealID} />
+            ))}
+          </li>
+        )}
+      </ul>
+
+      <div className={styles.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          onPageChange={(page) => {
+            setSearchParams((params) => {
+              params.set("pageNumber", page.toString());
+              return params;
+            });
+          }}
+          totalPageCount={totalPageCount + 1}
+        />
+      </div>
+    </div>
   );
 };
 

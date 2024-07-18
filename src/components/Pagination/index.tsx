@@ -38,19 +38,16 @@ const Pagination: FC<Props> = (props) => {
       >
         <div className={`${styles.arrow} ${styles.left}`} />
       </li>
-      {paginationRange.map((pageNumber, index) => {
-        if (pageNumber === DOTS) {
-          return (
-            <li
-              className={`${styles.paginationItem} ${styles.dots}`}
-              key={"dots-" + index}
-            >
-              &#8230;
-            </li>
-          );
-        }
 
-        return (
+      {paginationRange.map((pageNumber, index) => {
+        return pageNumber === DOTS ? (
+          <li
+            className={`${styles.paginationItem} ${styles.dots}`}
+            key={"dots-" + index}
+          >
+            &#8230;
+          </li>
+        ) : (
           <li
             className={`${styles.paginationItem} ${pageNumber === props.currentPage ? styles.selected : ""}`}
             key={"page-" + index}
@@ -60,6 +57,7 @@ const Pagination: FC<Props> = (props) => {
           </li>
         );
       })}
+
       <li
         className={`${styles.paginationItem} ${lastPage === props.currentPage ? styles.disabled : ""}`}
         onClick={onNext}

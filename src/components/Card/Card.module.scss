@@ -38,15 +38,11 @@
   font-size: 16px;
 }
 
-.pricesContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-
 .prices {
-  margin: 10px 0;
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  margin-top: 10px;
 }
 
 .normalPrice {

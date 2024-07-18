@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { range } from "../utils/helper";
 
 type Props = {
   totalPageCount: number;
@@ -12,10 +13,6 @@ const usePagination = ({
   siblingCount = 1,
 }: Props) => {
   const DOTS = -1;
-  const range = (start: number, end: number) => {
-    const length = end - start + 1;
-    return Array.from({ length }, (_, index) => index + start);
-  };
 
   const paginationRange = useMemo(() => {
     const totalPageNumbers = siblingCount + 5;
