@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { CardInfo } from "../../../src/services/models";
+import { DealInfo } from "../../../src/services/models";
 import { render, waitFor, screen, fireEvent } from "@testing-library/react";
-import DetailedCard from "../../../src/components/DetailedCard";
+import DealDetails from "../../../src/components/DealDetails";
 import { BrowserRouter } from "react-router-dom";
 
 const mockNavigate = vi.fn();
@@ -13,7 +13,7 @@ vi.mock("react-router-dom", async (importOriginal) => {
   };
 });
 
-const cardInfo: CardInfo = {
+const dealInfo: DealInfo = {
   cheapestPrice: {
     date: 911433600,
     price: "10",
@@ -38,7 +38,7 @@ const cardInfo: CardInfo = {
   },
 };
 
-describe("Tests for the DetailedCard component", () => {
+describe("Tests for the DealDetails component", () => {
   beforeEach(() => {
     globalThis.fetch = vi.fn();
   });
@@ -47,13 +47,13 @@ describe("Tests for the DetailedCard component", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(() => {
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(cardInfo),
+        json: () => Promise.resolve(dealInfo),
       } as Response);
     });
 
     render(
       <BrowserRouter>
-        <DetailedCard />
+        <DealDetails />
       </BrowserRouter>
     );
 
@@ -68,33 +68,33 @@ describe("Tests for the DetailedCard component", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(() => {
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(cardInfo),
+        json: () => Promise.resolve(dealInfo),
       } as Response);
     });
 
     render(
       <BrowserRouter>
-        <DetailedCard />
+        <DealDetails />
       </BrowserRouter>
     );
 
     await waitFor(() => {
-      expect(screen.getByText(cardInfo.gameInfo.name)).toBeInTheDocument();
+      expect(screen.getByText(dealInfo.gameInfo.name)).toBeInTheDocument();
       expect(
-        screen.getByText(`Reviews: ${cardInfo.gameInfo.steamRatingText}`)
+        screen.getByText(`Reviews: ${dealInfo.gameInfo.steamRatingText}`)
       ).toBeInTheDocument();
       expect(
-        screen.getByText(`Metacritic: ${cardInfo.gameInfo.metacriticScore}`)
+        screen.getByText(`Metacritic: ${dealInfo.gameInfo.metacriticScore}`)
       ).toBeInTheDocument();
       expect(
-        screen.getByText(`${cardInfo.gameInfo.salePrice}$`)
+        screen.getByText(`${dealInfo.gameInfo.salePrice}$`)
       ).toBeInTheDocument();
       expect(
-        screen.getByText(`${cardInfo.gameInfo.retailPrice}$`)
+        screen.getByText(`${dealInfo.gameInfo.retailPrice}$`)
       ).toBeInTheDocument();
       expect(screen.getByRole("img")).toHaveAttribute(
         "src",
-        cardInfo.gameInfo.thumb
+        dealInfo.gameInfo.thumb
       );
     });
   });
@@ -103,18 +103,18 @@ describe("Tests for the DetailedCard component", () => {
     vi.spyOn(globalThis, "fetch").mockImplementation(() => {
       return Promise.resolve({
         ok: true,
-        json: () => Promise.resolve(cardInfo),
+        json: () => Promise.resolve(dealInfo),
       } as Response);
     });
 
     render(
       <BrowserRouter>
-        <DetailedCard />
+        <DealDetails />
       </BrowserRouter>
     );
 
     await waitFor(() => {
-      expect(screen.getByText(cardInfo.gameInfo.name)).toBeInTheDocument();
+      expect(screen.getByText(dealInfo.gameInfo.name)).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByRole("button", { name: /close/i }));

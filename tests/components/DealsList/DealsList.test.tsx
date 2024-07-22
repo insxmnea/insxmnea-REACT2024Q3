@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { Deal } from "../../../src/services/models";
 import { render, screen } from "@testing-library/react";
-import CardList from "../../../src/components/CardList";
+import DealsList from "../../../src/components/DealsList";
 import { BrowserRouter } from "react-router-dom";
 
-describe("Tests for the CardList component", () => {
+describe("Tests for the DealsList component", () => {
   it("Verify that the component renders the specified number of cards", () => {
     const deals: Deal[] = [
       {
@@ -55,7 +55,7 @@ describe("Tests for the CardList component", () => {
 
     render(
       <BrowserRouter>
-        <CardList deals={deals} isFetching={false} />
+        <DealsList />
       </BrowserRouter>
     );
 
@@ -68,7 +68,7 @@ describe("Tests for the CardList component", () => {
 
     render(
       <BrowserRouter>
-        <CardList deals={deals} isFetching={false} />
+        <DealsList />
       </BrowserRouter>
     );
 

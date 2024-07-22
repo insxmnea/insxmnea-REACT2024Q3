@@ -1,14 +1,14 @@
 import { createRef, FC, RefObject, useEffect, useState } from "react";
-import styles from "./DetailedCard.module.scss";
-import { CardInfo } from "../../services/models";
+import styles from "./DealDetails.module.scss";
+import { DealInfo } from "../../services/models";
 import { getDeal } from "../../services/api";
 import Loader from "../Loader";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 type Props = {};
 
-const DetailedCard: FC<Props> = () => {
-  const [cardInfo, setCardInfo] = useState<CardInfo>();
+const DealDetails: FC<Props> = () => {
+  const [dealInfo, setDealInfo] = useState<DealInfo>();
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const detailedCardRef: RefObject<HTMLDivElement> =
@@ -61,7 +61,7 @@ const DetailedCard: FC<Props> = () => {
 
     try {
       const data = await getDeal(id);
-      setCardInfo(data);
+      setDealInfo(data);
     } catch (error) {
       console.error("Failed to fetch deal:", error);
     } finally {
@@ -82,29 +82,29 @@ const DetailedCard: FC<Props> = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} ref={detailedCardRef}>
-        {cardInfo?.gameInfo ? (
+        {dealInfo?.gameInfo ? (
           <>
-            <span className={styles.title}>{cardInfo.gameInfo.name}</span>
+            <span className={styles.title}>{dealInfo.gameInfo.name}</span>
             <div className={styles.thumbContainer}>
-              <img className={styles.thumb} src={cardInfo.gameInfo.thumb} />
+              <img className={styles.thumb} src={dealInfo.gameInfo.thumb} />
             </div>
             <div className={styles.info}>
-              <span>Reviews: {cardInfo.gameInfo.steamRatingText}</span>
-              <span>Metacritic: {cardInfo.gameInfo.metacriticScore}</span>
+              <span>Reviews: {dealInfo.gameInfo.steamRatingText}</span>
+              <span>Metacritic: {dealInfo.gameInfo.metacriticScore}</span>
 
               <div className={styles.prices}>
                 <span className={styles.salePrice}>
-                  {cardInfo.gameInfo.salePrice}$
+                  {dealInfo.gameInfo.salePrice}$
                 </span>
                 <span className={styles.normalPrice}>
-                  {cardInfo.gameInfo.retailPrice}$
+                  {dealInfo.gameInfo.retailPrice}$
                 </span>
               </div>
 
               <div className={styles.buttons}>
                 <a
                   className={styles.buy}
-                  href={`https://store.steampowered.com/app/${cardInfo.gameInfo.steamAppID}`}
+                  href={`https://store.steampowered.com/app/${dealInfo.gameInfo.steamAppID}`}
                   target="_blank"
                 >
                   Buy
@@ -128,4 +128,4 @@ const DetailedCard: FC<Props> = () => {
   );
 };
 
-export default DetailedCard;
+export default DealDetails;

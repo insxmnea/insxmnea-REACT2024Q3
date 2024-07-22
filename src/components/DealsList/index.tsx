@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Deal } from "../../services/models";
-import styles from "./CardList.module.scss";
-import Card from "../Card";
+import styles from "./DealsList.module.scss";
+import DealCard from "../DealCard";
 import Loader from "../Loader";
 import Pagination from "../Pagination";
 import { useSearchParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import { getDeals } from "../../services/api";
 
 type Props = {};
 
-const CardList: FC<Props> = () => {
+const DealsList: FC<Props> = () => {
   const [isFetching, setIsFetching] = useState<boolean>(false);
   const [deals, setDeals] = useState<Deal[]>([]);
   const [totalPageCount, setTotalPageCount] = useState<number>(0);
@@ -50,7 +50,7 @@ const CardList: FC<Props> = () => {
         ) : (
           <li className={styles.deals}>
             {deals.map((deal) => (
-              <Card deal={deal} key={deal.dealID} />
+              <DealCard deal={deal} key={deal.dealID} />
             ))}
           </li>
         )}
@@ -72,4 +72,4 @@ const CardList: FC<Props> = () => {
   );
 };
 
-export default CardList;
+export default DealsList;

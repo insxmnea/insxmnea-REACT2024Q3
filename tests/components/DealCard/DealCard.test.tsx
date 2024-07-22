@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { Deal } from "../../../src/services/models";
-import Card from "../../../src/components/Card";
+import DealCard from "../../../src/components/DealCard";
 import { BrowserRouter } from "react-router-dom";
 
 const mockNavigate = vi.fn();
@@ -36,11 +36,11 @@ const deal: Deal = {
   title: "Half-Life",
 };
 
-describe("Tests for the Card component", () => {
+describe("Tests for the DealCard component", () => {
   it("Ensure that the card component renders the relevant card data", () => {
     render(
       <BrowserRouter>
-        <Card deal={deal} />
+        <DealCard deal={deal} />
       </BrowserRouter>
     );
 
@@ -53,7 +53,7 @@ describe("Tests for the Card component", () => {
   it("Validate that clicking on a card opens a detailed card component", async () => {
     render(
       <BrowserRouter>
-        <Card deal={deal} />
+        <DealCard deal={deal} />
       </BrowserRouter>
     );
 

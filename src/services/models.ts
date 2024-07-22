@@ -47,9 +47,9 @@ type GameInfo = Omit<
   steamworks: string;
 };
 
-type CardInfo = {
+type DealInfo = {
   cheapestPrice: CheapestPrice;
   gameInfo: GameInfo;
 };
 
-export type { Deal, Deals, CardInfo };
+export type { Deal, Deals, DealInfo };

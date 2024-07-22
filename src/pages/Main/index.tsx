@@ -1,7 +1,7 @@
 import { FC } from "react";
 import styles from "./Main.module.scss";
 import SearchBar from "../../components/SearchBar";
-import CardList from "../../components/CardList";
+import DealsList from "../../components/DealsList";
 import { Outlet } from "react-router-dom";
 
 type Props = {};
@@ -14,7 +14,7 @@ const Main: FC<Props> = () => {
       </header>
 
       <div className={styles.content}>
-        <CardList />
+        <DealsList />
         <Outlet />
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Deal } from "../../services/models";
-import styles from "./Card.module.scss";
+import styles from "./DealCard.module.scss";
 import { truncate } from "../../utils/helper";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -8,7 +8,7 @@ type Props = {
   deal: Deal;
 };
 
-const Card: FC<Props> = (props) => {
+const DealCard: FC<Props> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const currencyFormat = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -40,4 +40,4 @@ const Card: FC<Props> = (props) => {
   );
 };
 
-export default Card;
+export default DealCard;

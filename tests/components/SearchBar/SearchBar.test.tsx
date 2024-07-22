@@ -29,7 +29,7 @@ describe("SearchBar component", () => {
     const onSearch = vi.fn();
     const history: string[] = [];
 
-    render(<SearchBar history={history} onSearch={onSearch} />);
+    render(<SearchBar />);
 
     const input = screen.getByPlaceholderText("Search");
     const button = screen.getByRole("button");
@@ -46,7 +46,7 @@ describe("SearchBar component", () => {
     const onSearch = vi.fn();
     const history: string[] = ["stored query"];
 
-    render(<SearchBar history={history} onSearch={onSearch} />);
+    // render(<SearchBar history={history} onSearch={onSearch} />);
 
     const input = screen.getByPlaceholderText("Search");
     expect(input).toHaveValue("stored query");
