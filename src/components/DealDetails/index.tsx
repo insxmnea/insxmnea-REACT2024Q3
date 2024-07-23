@@ -1,21 +1,21 @@
-import { createRef, FC, RefObject, useEffect, useState } from "react";
+import { createRef, FC, RefObject, useEffect } from "react";
 import styles from "./DealDetails.module.scss";
-import { DealInfo } from "../../services/models";
-import { getDeal } from "../../services/api";
 import Loader from "../Loader";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { dealsAPI } from "../../services/DealService";
 
 type Props = {};
 
 const DealDetails: FC<Props> = () => {
-  const [dealInfo, setDealInfo] = useState<DealInfo>();
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-
   const detailedCardRef: RefObject<HTMLDivElement> =
     createRef<HTMLDivElement>();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const detailedCardId = searchParams.get("id") || "";
+
+  const { data, isFetching, isError } = dealsAPI.useGetDealQuery(
+    encodeURIComponent(detailedCardId)
+  );
 
   const navigate = useNavigate();
 
@@ -52,23 +52,6 @@ const DealDetails: FC<Props> = () => {
     };
   }, [detailedCardRef]);
 
-  useEffect(() => {
-    onOpen(encodeURIComponent(detailedCardId));
-  }, [detailedCardId]);
-
-  const onOpen = async (id: string) => {
-    setIsFetching(true);
-
-    try {
-      const data = await getDeal(id);
-      setDealInfo(data);
-    } catch (error) {
-      console.error("Failed to fetch deal:", error);
-    } finally {
-      setIsFetching(false);
-    }
-  };
-
   if (isFetching) {
     return (
       <div className={styles.wrapper}>
@@ -82,29 +65,29 @@ const DealDetails: FC<Props> = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} ref={detailedCardRef}>
-        {dealInfo?.gameInfo ? (
+        {data?.gameInfo && !isError ? (
           <>
-            <span className={styles.title}>{dealInfo.gameInfo.name}</span>
+            <span className={styles.title}>{data.gameInfo.name}</span>
             <div className={styles.thumbContainer}>
-              <img className={styles.thumb} src={dealInfo.gameInfo.thumb} />
+              <img className={styles.thumb} src={data.gameInfo.thumb} />
             </div>
             <div className={styles.info}>
-              <span>Reviews: {dealInfo.gameInfo.steamRatingText}</span>
-              <span>Metacritic: {dealInfo.gameInfo.metacriticScore}</span>
+              <span>Reviews: {data.gameInfo.steamRatingText}</span>
+              <span>Metacritic: {data.gameInfo.metacriticScore}</span>
 
               <div className={styles.prices}>
                 <span className={styles.salePrice}>
-                  {dealInfo.gameInfo.salePrice}$
+                  {data.gameInfo.salePrice}$
                 </span>
                 <span className={styles.normalPrice}>
-                  {dealInfo.gameInfo.retailPrice}$
+                  {data.gameInfo.retailPrice}$
                 </span>
               </div>
 
               <div className={styles.buttons}>
                 <a
                   className={styles.buy}
-                  href={`https://store.steampowered.com/app/${dealInfo.gameInfo.steamAppID}`}
+                  href={`https://store.steampowered.com/app/${data.gameInfo.steamAppID}`}
                   target="_blank"
                 >
                   Buy

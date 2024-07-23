@@ -1,43 +1,29 @@
-import { FC, useEffect, useState } from "react";
-import { Deal } from "../../services/models";
+import { FC } from "react";
 import styles from "./DealsList.module.scss";
 import DealCard from "../DealCard";
 import Loader from "../Loader";
 import Pagination from "../Pagination";
 import { useSearchParams } from "react-router-dom";
-import { getDeals } from "../../services/api";
+import { dealsAPI } from "../../services/DealService";
 
 type Props = {};
 
 const DealsList: FC<Props> = () => {
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [deals, setDeals] = useState<Deal[]>([]);
-  const [totalPageCount, setTotalPageCount] = useState<number>(0);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("pageNumber")) || 1;
   const title = searchParams.get("title") || "";
 
-  const fetchData = async () => {
-    setIsFetching(true);
-
-    try {
-      const data = await getDeals(title, currentPage - 1);
-      setDeals(data.deals);
-      setTotalPageCount(data.totalPageCount);
-    } catch (error) {
-      console.error("Failed to fetch deals:", error);
-    } finally {
-      setIsFetching(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [currentPage, title]);
+  const { data, isFetching, isError } = dealsAPI.useGetDealsQuery({
+    title: title,
+    pageNumber: currentPage - 1,
+  });
 
   if (isFetching) {
     return <Loader />;
+  }
+
+  if (!data || isError) {
+    return <span className={styles.noResults}>No results</span>;
   }
 
   return (
@@ -45,11 +31,11 @@ const DealsList: FC<Props> = () => {
       {title && <div className={styles.title}>Search results for: {title}</div>}
 
       <ul>
-        {!deals.length ? (
+        {!data.deals ? (
           <li className={styles.noResults}>No results</li>
         ) : (
           <li className={styles.deals}>
-            {deals.map((deal) => (
+            {data.deals.map((deal) => (
               <DealCard deal={deal} key={deal.dealID} />
             ))}
           </li>
@@ -65,7 +51,7 @@ const DealsList: FC<Props> = () => {
               return params;
             });
           }}
-          totalPageCount={totalPageCount + 1}
+          totalPageCount={data.totalPageCount + 1}
         />
       </div>
     </div>
