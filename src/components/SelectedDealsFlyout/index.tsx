@@ -2,6 +2,7 @@ import { FC } from "react";
 import styles from "./SelectedDealsFlyout.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { clearDeals } from "../../store/reducers/SelectedDealsSlice";
+import downloadCSV from "../../utils/downloadCSV";
 
 const SelectedDealsFlyout: FC = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,12 @@ const SelectedDealsFlyout: FC = () => {
         Unselect all
       </button>
       <span className={styles.count}>{deals.length} items are selected</span>
-      <button className={styles.button}>Download</button>
+      <button
+        className={styles.button}
+        onClick={() => downloadCSV(deals, `${deals.length}_deals`)}
+      >
+        Download
+      </button>
     </div>
   );
 };
