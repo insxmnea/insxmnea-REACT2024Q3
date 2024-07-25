@@ -8,6 +8,7 @@ import ErrorBoundaryLayout from "./components/ErrorBoundaryLayout/index.tsx";
 import DealDetails from "./components/DealDetails/index.tsx";
 import { setupStore } from "./store/store.ts";
 import { Provider } from "react-redux";
+import ThemeProvider from "./providers/ThemeProvider/ThemeProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +33,9 @@ const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </Provider>
   </React.StrictMode>
 );

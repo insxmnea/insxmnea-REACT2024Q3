@@ -11,7 +11,7 @@
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: $pivot;
+  accent-color: var(--checkbox);
 }
 
 .card {
@@ -22,8 +22,8 @@
   height: 100%;
   border-radius: 5px;
   box-shadow: $shadow;
-  background-color: $gray-dark;
-  color: $gray-text;
+  background-color: var(--background-secondary);
+  color: var(--text);
   overflow: hidden;
   cursor: pointer;
   box-sizing: border-box;
@@ -32,8 +32,8 @@
 }
 
 .checked {
-  outline: 2px solid $pivot;
-  background-color: $gray;
+  outline: 2px solid var(--checkbox);
+  background-color: var(--background-secondary-hover);
 }
 
 .thumbContainer {
@@ -41,7 +41,7 @@
   justify-content: center;
   width: 100%;
   height: 70px;
-  border-bottom: 1px solid $gray;
+  border-bottom: 1px solid var(--border);
 }
 
 .thumb {
@@ -70,25 +70,12 @@
 
 .normalPrice {
   text-decoration: line-through;
-  color: $gray-text;
+  color: var(--text);
   font-size: 10px;
   margin-left: 4px;
 }
 
 .salePrice {
-  color: $green;
+  color: var(--price);
   font-size: 16px;
-}
-
-.buy {
-  padding: 5px 10px;
-  border-radius: 5px;
-  background-color: $gray;
-  color: $gray-text;
-  text-decoration: none;
-  transition: all 0.3s ease;
-
-  &:hover {
-    color: $pivot;
-  }
 }

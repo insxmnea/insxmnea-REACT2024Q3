@@ -22,7 +22,7 @@
   position: absolute;
   inset: 0px;
   border-radius: 50%;
-  border: 5px solid $gray-text;
+  border: 5px solid var(--loader);
   animation: prixClipFix 2s linear infinite;
 }
 

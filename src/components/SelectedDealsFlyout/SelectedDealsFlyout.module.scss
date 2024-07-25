@@ -8,8 +8,8 @@
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: $black;
-  color: $gray-text;
+  background-color: var(--flyout-background);
+  color: var(--text);
   box-shadow: $shadow;
   transition: all 0.3s ease-in-out;
   z-index: 1;
@@ -29,5 +29,5 @@
 .button {
   cursor: pointer;
   font-size: 13px;
-  border: 2px dotted $gray-dark;
+  border: 2px dotted var(--border);
 }

@@ -14,14 +14,14 @@
   padding: 10px 40px 10px 10px;
   border-radius: 5px;
   border: none;
-  background-color: $gray-dark;
-  color: $gray-text;
+  background-color: var(--background-secondary);
+  color: var(--text);
   box-sizing: border-box;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 
   &::placeholder {
-    color: $gray-text;
+    color: var(--text);
   }
 
   &:focus {
@@ -37,8 +37,8 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: $black;
-  color: $gray-text;
+  background-color: var(--button-background);
+  color: var(--text);
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   cursor: pointer;
@@ -57,7 +57,7 @@
   width: 100%;
   max-height: 200px;
   overflow-y: auto;
-  background-color: $gray-dark;
+  background-color: var(--background-secondary);
   box-shadow: $shadow;
   border-radius: 5px;
   z-index: 1;
@@ -68,6 +68,6 @@
   cursor: pointer;
 
   &:hover {
-    background-color: $gray;
+    background-color: var(--button-background-hover);
   }
 }
