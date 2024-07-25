@@ -1,16 +1,39 @@
 @use "/src/constants/colors" as *;
 
 .wrapper {
+  position: relative;
+}
+
+.checkbox {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: $pivot;
+}
+
+.card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
+  height: 100%;
   border-radius: 5px;
   box-shadow: $shadow;
   background-color: $gray-dark;
   color: $gray-text;
   overflow: hidden;
   cursor: pointer;
+  box-sizing: border-box;
+
+  transition: background-color 0.3s ease;
+}
+
+.checked {
+  outline: 2px solid $pivot;
+  background-color: $gray;
 }
 
 .thumbContainer {

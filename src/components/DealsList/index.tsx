@@ -5,6 +5,7 @@ import Loader from "../Loader";
 import Pagination from "../Pagination";
 import { useSearchParams } from "react-router-dom";
 import { dealsAPI } from "../../services/DealService";
+import SelectedDealsFlyout from "../SelectedDealsFlyout";
 
 type Props = {};
 
@@ -54,6 +55,8 @@ const DealsList: FC<Props> = () => {
           totalPageCount={data.totalPageCount + 1}
         />
       </div>
+
+      <SelectedDealsFlyout />
     </div>
   );
 };

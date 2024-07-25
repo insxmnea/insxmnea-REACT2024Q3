@@ -8,15 +8,19 @@ type Props = {};
 
 const Main: FC<Props> = () => {
   return (
-    <div className={styles.wrapper}>
-      <header className={styles.header}>
-        <SearchBar />
-      </header>
+    <div>
+      <div className={styles.wrapper}>
+        <header className={styles.header}>
+          <SearchBar />
+        </header>
 
-      <div className={styles.content}>
-        <DealsList />
-        <Outlet />
+        <div className={styles.content}>
+          <DealsList />
+          <Outlet />
+        </div>
       </div>
+
+      <footer className={styles.footer}></footer>
     </div>
   );
 };

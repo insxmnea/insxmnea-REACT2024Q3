@@ -83,6 +83,7 @@ const SearchBar: FC<Props> = () => {
         type="text"
         placeholder="Search"
         className={styles.input}
+        id={"search-bar"}
         ref={inputRef}
         onChange={handleInputChange}
         value={query}

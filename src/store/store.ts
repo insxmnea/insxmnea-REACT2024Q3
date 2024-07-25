@@ -1,9 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import dealsReducer from "./reducers/DealsSlice";
+import selectedDealsReducer from "./reducers/SelectedDealsSlice";
 import { dealsAPI } from "../services/DealService";
 
 const rootReducer = combineReducers({
-  dealsReducer,
+  selectedDealsReducer,
   [dealsAPI.reducerPath]: dealsAPI.reducer,
 });
 
