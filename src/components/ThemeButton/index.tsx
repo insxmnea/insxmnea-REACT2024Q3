@@ -6,14 +6,16 @@ const ThemeButton: FC = () => {
   const { theme, toggleTheme } = useThemeContext();
 
   return (
-    <div className={styles.wrapper}>
+    <label className={styles.label}>
       <input
         type="checkbox"
         id="toggle-theme"
+        className={styles.toggle}
         onChange={toggleTheme}
         checked={theme === "dark"}
       />
-    </div>
+      <span className={styles.slider}></span>
+    </label>
   );
 };
 
