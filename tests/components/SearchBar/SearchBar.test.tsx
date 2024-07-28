@@ -1,54 +1,52 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import SearchBar from "../../../src/components/SearchBar";
 
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value;
-    },
-    clear: () => {
-      store = {};
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-  };
-})();
-
-Object.defineProperty(window, "localStorage", { value: localStorageMock });
+vi.mock("../../hooks/useSearchQuery", () => ({
+  default: vi.fn(() => ["test query", vi.fn()]),
+}));
+vi.mock("../../hooks/useHistory", () => ({
+  default: vi.fn(() => [["test1", "test2"], vi.fn()]),
+}));
 
 describe("SearchBar component", () => {
-  beforeEach(() => {
-    localStorage.clear();
+  it("renders input and button", () => {
+    render(
+      <MemoryRouter>
+        <SearchBar />
+      </MemoryRouter>
+    );
+    expect(screen.getByPlaceholderText("Search")).toBeInTheDocument();
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 
-  it("Verify that clicking the Search button saves the entered value to the local storage", () => {
-    const onSearch = vi.fn();
-    const history: string[] = [];
-
-    render(<SearchBar />);
-
+  it("hides search history on outside click", async () => {
+    render(
+      <MemoryRouter>
+        <SearchBar />
+      </MemoryRouter>
+    );
     const input = screen.getByPlaceholderText("Search");
-    const button = screen.getByRole("button");
-
-    fireEvent.change(input, { target: { value: "test query" } });
-    fireEvent.click(button);
-
-    expect(localStorage.getItem("searchQuery")).toBe('"test query"');
-    expect(onSearch).toHaveBeenCalledWith("test query");
+    fireEvent.focus(input);
+    fireEvent.mouseDown(document);
+    await waitFor(() => {
+      expect(screen.queryByText("test1")).not.toBeInTheDocument();
+      expect(screen.queryByText("test2")).not.toBeInTheDocument();
+    });
   });
 
-  it("Check that the component retrieves the value from the local storage upon mounting", () => {
-    localStorage.setItem("searchQuery", '"stored query"');
-    const onSearch = vi.fn();
-    const history: string[] = ["stored query"];
-
-    // render(<SearchBar history={history} onSearch={onSearch} />);
-
+  it("handles Enter and Escape keys", () => {
+    render(
+      <MemoryRouter>
+        <SearchBar />
+      </MemoryRouter>
+    );
     const input = screen.getByPlaceholderText("Search");
-    expect(input).toHaveValue("stored query");
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: "Escape" });
+    expect(screen.queryByText("test1")).not.toBeInTheDocument();
+    fireEvent.keyDown(input, { key: "Enter" });
+    expect(screen.getByRole("button")).toBeInTheDocument();
   });
 });

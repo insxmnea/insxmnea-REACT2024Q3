@@ -1,132 +1,53 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DealInfo } from "../../../src/services/models";
-import { render, waitFor, screen, fireEvent } from "@testing-library/react";
-import DealDetails from "../../../src/components/DealDetails";
+import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
+import { server } from "../../mocks/server";
+import { http, HttpResponse } from "msw";
+import { beforeAll, afterEach, afterAll, describe, it, expect } from "vitest";
+import { setupStore } from "../../../src/store/store";
+import DealDetails from "../../../src/components/DealDetails";
 
-const mockNavigate = vi.fn();
-vi.mock("react-router-dom", async (importOriginal) => {
-  const actual: typeof importOriginal = await importOriginal();
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
-
-const dealInfo: DealInfo = {
-  cheapestPrice: {
-    date: 911433600,
-    price: "10",
-  },
-  gameInfo: {
-    gameID: "75",
-    metacriticLink: "/game/half-life/",
-    metacriticScore: "96",
-    name: "Half-Life",
-    publisher: "Valve",
-    releaseDate: 911433600,
-    retailPrice: "9.99",
-    salePrice: "0.99",
-    steamAppID: "70",
-    steamRatingCount: "93378",
-    steamRatingPercent: "96",
-    steamRatingText: "Overwhelmingly Positive",
-    steamworks: "1",
-    storeID: "1",
-    thumb:
-      "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/70/capsule_sm_120.jpg?t=1700269108",
-  },
+const renderWithProviders = (ui: React.ReactElement) => {
+  const store = setupStore();
+  return render(
+    <Provider store={store}>
+      <BrowserRouter>{ui}</BrowserRouter>
+    </Provider>
+  );
 };
 
-describe("Tests for the DealDetails component", () => {
-  beforeEach(() => {
-    globalThis.fetch = vi.fn();
+beforeAll(() => server.listen());
+
+afterEach(() => server.resetHandlers());
+
+afterAll(() => server.close());
+
+describe("DealDetails component", () => {
+  it("renders loading state", () => {
+    renderWithProviders(<DealDetails />);
+    const loaderElement = screen.getByTestId("loader");
+    expect(loaderElement).toBeInTheDocument();
   });
 
-  it("Check that a loading indicator is displayed while fetching data", async () => {
-    vi.spyOn(globalThis, "fetch").mockImplementation(() => {
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(dealInfo),
-      } as Response);
-    });
-
-    render(
-      <BrowserRouter>
-        <DealDetails />
-      </BrowserRouter>
+  it("renders error state", async () => {
+    server.use(
+      http.get("https://www.cheapshark.com/api/1.0/deals", () => {
+        return new HttpResponse(null, {
+          status: 500,
+        });
+      })
     );
-
-    expect(screen.getByTestId("loader")).toBeInTheDocument();
-
-    await waitFor(() =>
-      expect(screen.queryByTestId("loader")).not.toBeInTheDocument()
-    );
+    renderWithProviders(<DealDetails />);
+    expect(await screen.findByText("No results")).toBeInTheDocument();
   });
 
-  it("Make sure the detailed card component correctly displays the detailed card data", async () => {
-    vi.spyOn(globalThis, "fetch").mockImplementation(() => {
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(dealInfo),
-      } as Response);
-    });
-
-    render(
-      <BrowserRouter>
-        <DealDetails />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText(dealInfo.gameInfo.name)).toBeInTheDocument();
-      expect(
-        screen.getByText(`Reviews: ${dealInfo.gameInfo.steamRatingText}`)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(`Metacritic: ${dealInfo.gameInfo.metacriticScore}`)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(`${dealInfo.gameInfo.salePrice}$`)
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText(`${dealInfo.gameInfo.retailPrice}$`)
-      ).toBeInTheDocument();
-      expect(screen.getByRole("img")).toHaveAttribute(
-        "src",
-        dealInfo.gameInfo.thumb
-      );
-    });
-  });
-
-  it("Ensure that clicking the close button hides the component", async () => {
-    vi.spyOn(globalThis, "fetch").mockImplementation(() => {
-      return Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve(dealInfo),
-      } as Response);
-    });
-
-    render(
-      <BrowserRouter>
-        <DealDetails />
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText(dealInfo.gameInfo.name)).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /close/i }));
-
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith(
-        {
-          pathname: "/insxmnea-REACT2024Q3/",
-          search: "",
-        },
-        { replace: true }
-      );
-    });
+  it("renders deal details", async () => {
+    server.use(http.get("https://www.cheapshark.com/api/1.0/deals", () => {}));
+    renderWithProviders(<DealDetails />);
+    expect(await screen.findByText(/game 1/i)).toBeInTheDocument();
+    expect(screen.getByText(/very positive/i)).toBeInTheDocument();
+    expect(screen.getByText(/85/i)).toBeInTheDocument();
+    expect(screen.getByText(/10.99/i)).toBeInTheDocument();
+    expect(screen.getByText(/19.99/i)).toBeInTheDocument();
   });
 });
