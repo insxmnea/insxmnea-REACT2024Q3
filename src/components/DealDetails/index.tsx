@@ -1,21 +1,21 @@
-import { createRef, FC, RefObject, useEffect, useState } from "react";
-import styles from "./DetailedCard.module.scss";
-import { CardInfo } from "../../services/models";
-import { getDeal } from "../../services/api";
+import { createRef, FC, RefObject, useEffect } from "react";
+import styles from "./DealDetails.module.scss";
 import Loader from "../Loader";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { dealsAPI } from "../../services/DealService";
 
 type Props = {};
 
-const DetailedCard: FC<Props> = () => {
-  const [cardInfo, setCardInfo] = useState<CardInfo>();
-  const [isFetching, setIsFetching] = useState<boolean>(false);
-
+const DealDetails: FC<Props> = () => {
   const detailedCardRef: RefObject<HTMLDivElement> =
     createRef<HTMLDivElement>();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const detailedCardId = searchParams.get("id") || "";
+
+  const { data, isFetching, isError } = dealsAPI.useGetDealQuery(
+    encodeURIComponent(detailedCardId)
+  );
 
   const navigate = useNavigate();
 
@@ -52,23 +52,6 @@ const DetailedCard: FC<Props> = () => {
     };
   }, [detailedCardRef]);
 
-  useEffect(() => {
-    onOpen(detailedCardId);
-  }, [detailedCardId]);
-
-  const onOpen = async (id: string) => {
-    setIsFetching(true);
-
-    try {
-      const data = await getDeal(id);
-      setCardInfo(data);
-    } catch (error) {
-      console.error("Failed to fetch deal:", error);
-    } finally {
-      setIsFetching(false);
-    }
-  };
-
   if (isFetching) {
     return (
       <div className={styles.wrapper}>
@@ -82,37 +65,34 @@ const DetailedCard: FC<Props> = () => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.container} ref={detailedCardRef}>
-        {cardInfo?.gameInfo ? (
+        {data?.gameInfo && !isError ? (
           <>
-            <span className={styles.title}>{cardInfo.gameInfo.name}</span>
+            <span className={styles.title}>{data.gameInfo.name}</span>
             <div className={styles.thumbContainer}>
-              <img className={styles.thumb} src={cardInfo.gameInfo.thumb} />
+              <img className={styles.thumb} src={data.gameInfo.thumb} />
             </div>
             <div className={styles.info}>
-              <span>Reviews: {cardInfo.gameInfo.steamRatingText}</span>
-              <span>Metacritic: {cardInfo.gameInfo.metacriticScore}</span>
+              <span>Reviews: {data.gameInfo.steamRatingText}</span>
+              <span>Metacritic: {data.gameInfo.metacriticScore}</span>
 
               <div className={styles.prices}>
                 <span className={styles.salePrice}>
-                  {cardInfo.gameInfo.salePrice}$
+                  {data.gameInfo.salePrice}$
                 </span>
                 <span className={styles.normalPrice}>
-                  {cardInfo.gameInfo.retailPrice}$
+                  {data.gameInfo.retailPrice}$
                 </span>
               </div>
 
               <div className={styles.buttons}>
                 <a
                   className={styles.buy}
-                  href={`https://store.steampowered.com/app/${cardInfo.gameInfo.steamAppID}`}
+                  href={`https://store.steampowered.com/app/${data.gameInfo.steamAppID}`}
                   target="_blank"
                 >
                   Buy
                 </a>
-                <button
-                  className={styles.close}
-                  onClick={() => hideDetailedCard()}
-                >
+                <button className={styles.close} onClick={hideDetailedCard}>
                   Close
                 </button>
               </div>
@@ -121,7 +101,7 @@ const DetailedCard: FC<Props> = () => {
         ) : (
           <div>
             <span className={styles.noResults}>No results</span>
-            <button className={styles.close} onClick={() => hideDetailedCard()}>
+            <button className={styles.close} onClick={hideDetailedCard}>
               Close
             </button>
           </div>
@@ -131,4 +111,4 @@ const DetailedCard: FC<Props> = () => {
   );
 };
 
-export default DetailedCard;
+export default DealDetails;

@@ -10,18 +10,20 @@ import {
 import styles from "./SearchBar.module.scss";
 import searchIcon from "../../assets/icons/search.svg";
 import useSearchQuery from "../../hooks/useSearchQuery";
+import useHistory from "../../hooks/useHistory";
+import { useSearchParams } from "react-router-dom";
 
-type Props = {
-  history: string[];
-  onSearch: (search: string) => void;
-};
+type Props = {};
 
-const SearchBar: FC<Props> = (props) => {
+const SearchBar: FC<Props> = () => {
   const [query, setQuery] = useSearchQuery();
   const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [history, updateHistory] = useHistory();
 
   const searchBoxRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>();
   const inputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
+
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,12 +42,22 @@ const SearchBar: FC<Props> = (props) => {
     };
   }, [searchBoxRef]);
 
+  const onSearch = async (search: string = "") => {
+    updateHistory(search);
+
+    setSearchParams((params) => {
+      params.set("title", search);
+      params.set("pageNumber", "1");
+      return params;
+    });
+  };
+
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
   };
 
   const handleButtonClick = (search: string) => {
-    props.onSearch(search);
+    onSearch(search);
 
     setShowHistory(false);
 
@@ -71,6 +83,7 @@ const SearchBar: FC<Props> = (props) => {
         type="text"
         placeholder="Search"
         className={styles.input}
+        id={"search-bar"}
         ref={inputRef}
         onChange={handleInputChange}
         value={query}
@@ -84,9 +97,9 @@ const SearchBar: FC<Props> = (props) => {
         <img src={searchIcon} className={styles.icon} alt="search icon" />
       </button>
 
-      {props.history.length > 0 && showHistory && (
+      {history.length > 0 && showHistory && (
         <div className={styles.history}>
-          {props.history.map((value) => {
+          {history.map((value) => {
             if (value.trim() === "") return null;
 
             return (

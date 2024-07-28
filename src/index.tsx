@@ -5,7 +5,10 @@ import Main from "./pages/Main/index.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./pages/NotFound/index.tsx";
 import ErrorBoundaryLayout from "./components/ErrorBoundaryLayout/index.tsx";
-import DetailedCard from "./components/DetailedCard/index.tsx";
+import DealDetails from "./components/DealDetails/index.tsx";
+import { setupStore } from "./store/store.ts";
+import { Provider } from "react-redux";
+import ThemeProvider from "./providers/ThemeProvider/ThemeProvider.tsx";
 
 const router = createBrowserRouter([
   {
@@ -14,7 +17,7 @@ const router = createBrowserRouter([
       {
         path: "/insxmnea-REACT2024Q3/",
         element: <Main />,
-        children: [{ path: "details", element: <DetailedCard /> }],
+        children: [{ path: "details", element: <DealDetails /> }],
       },
       {
         path: "*",
@@ -24,9 +27,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+const store = setupStore();
+
 const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </Provider>
   </React.StrictMode>
 );

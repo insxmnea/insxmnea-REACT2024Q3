@@ -12,8 +12,8 @@
   font-size: 16px;
 
   color-scheme: light dark;
-  color: $gray-text;
-  background-color: $background;
+  color: var(--text);
+  background-color: var(--background);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -33,11 +33,11 @@ button {
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: $black;
-  color: $gray-text;
+  background-color: var(--button-background);
+  color: var(--text);
   cursor: pointer;
   transition: all 0.05s ease-in-out;
 }
 button:hover {
-  background-color: $gray;
+  background-color: var(--button-background-hover);
 }
