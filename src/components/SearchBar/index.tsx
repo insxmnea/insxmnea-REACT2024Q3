@@ -23,7 +23,7 @@ const SearchBar: FC<Props> = () => {
   const searchBoxRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>();
   const inputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

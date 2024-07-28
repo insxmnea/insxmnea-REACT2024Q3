@@ -20,7 +20,7 @@ const DealCard: FC<Props> = (props) => {
 
   const [isChecked, setIsChecked] = useState(false);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const currencyFormat = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
