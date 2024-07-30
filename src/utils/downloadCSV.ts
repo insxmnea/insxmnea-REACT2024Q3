@@ -5,7 +5,7 @@ const convertToCSV = (objArray: object) => {
   for (let i = 0; i < array.length; i++) {
     let line = "";
     for (const index in array[i]) {
-      if (line !== "") line += ",";
+      if (line !== "") line += ";";
 
       line += array[i][index];
     }
