@@ -11,17 +11,15 @@ const checkSelected = (deals: Deal[], id: string) => {
   return deals.some((deal) => deal.dealID === id);
 };
 
-type Props = {
-  deal: Deal;
-};
+interface Props extends Deal {}
 
 const DealCard: FC<Props> = (props) => {
   const dispatch = useAppDispatch();
   const { deals } = useAppSelector((state) => state.selectedDealsReducer);
 
   const isChecked = useMemo(
-    () => checkSelected(deals, props.deal.dealID),
-    [deals, props.deal.dealID]
+    () => checkSelected(deals, props.dealID),
+    [deals, props.dealID]
   );
 
   const [searchParams] = useSearchParams();
@@ -32,9 +30,9 @@ const DealCard: FC<Props> = (props) => {
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      dispatch(addDeal(props.deal));
+      dispatch(addDeal(props));
     } else {
-      dispatch(removeDeal(props.deal.dealID));
+      dispatch(removeDeal(props.dealID));
     }
   };
 
@@ -43,29 +41,29 @@ const DealCard: FC<Props> = (props) => {
       <input
         className={styles.checkbox}
         type="checkbox"
-        id={`checkbox-${props.deal.dealID}`}
+        id={`checkbox-${props.dealID}`}
         checked={isChecked}
         onChange={handleCheckboxChange}
       />
       <Link
-        to={`/insxmnea-REACT2024Q3/details?id=${props.deal.dealID}&${searchParams.toString()}`}
+        to={`/insxmnea-REACT2024Q3/details?id=${props.dealID}&${searchParams.toString()}`}
         className={classNames(styles.card, {
           [styles.checked]: isChecked,
         })}
       >
         <div className={styles.thumbContainer}>
-          <img className={styles.thumb} src={props.deal.thumb} />
+          <img className={styles.thumb} src={props.thumb} />
         </div>
 
         <div className={styles.info}>
-          <span>{truncate(props.deal.title, 22)}</span>
+          <span>{truncate(props.title, 22)}</span>
 
           <div className={styles.prices}>
             <span className={styles.salePrice}>
-              {currencyFormat.format(Number(props.deal.salePrice))}
+              {currencyFormat.format(Number(props.salePrice))}
             </span>
             <span className={styles.normalPrice}>
-              {currencyFormat.format(Number(props.deal.normalPrice))}
+              {currencyFormat.format(Number(props.normalPrice))}
             </span>
           </div>
         </div>

@@ -32,28 +32,19 @@ const DealsList: FC<Props> = () => {
       {title && <div className={styles.title}>Search results for: {title}</div>}
 
       <ul>
-        {!data.deals ? (
-          <li className={styles.noResults}>No results</li>
-        ) : (
+        {data.deals ? (
           <li className={styles.deals}>
             {data.deals.map((deal) => (
-              <DealCard deal={deal} key={deal.dealID} />
+              <DealCard {...deal} key={deal.dealID} />
             ))}
           </li>
+        ) : (
+          <li className={styles.noResults}>No results</li>
         )}
       </ul>
 
       <div className={styles.pagination}>
-        <Pagination
-          currentPage={currentPage}
-          onPageChange={(page) => {
-            setSearchParams((params) => {
-              params.set("pageNumber", page.toString());
-              return params;
-            });
-          }}
-          totalPageCount={data.totalPageCount + 1}
-        />
+        <Pagination totalPageCount={data.totalPageCount + 1} />
       </div>
 
       <SelectedDealsFlyout />

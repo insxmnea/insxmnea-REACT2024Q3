@@ -100,8 +100,6 @@ const SearchBar: FC<Props> = () => {
       {history.length > 0 && showHistory && (
         <div className={styles.history}>
           {history.map((value) => {
-            if (value.trim() === "") return null;
-
             return (
               <div
                 className={styles.historyItem}

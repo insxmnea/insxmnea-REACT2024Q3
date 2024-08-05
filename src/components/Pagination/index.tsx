@@ -2,40 +2,49 @@ import { FC } from "react";
 import styles from "./Pagination.module.scss";
 import usePagination from "../../hooks/usePagination";
 import classNames from "classnames";
+import { useSearchParams } from "react-router-dom";
 
 type Props = {
   totalPageCount: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
   siblingCount?: number;
 };
 
 const Pagination: FC<Props> = (props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("pageNumber")) || 1;
+
   const paginationRange = usePagination({
     totalPageCount: props.totalPageCount,
-    currentPage: props.currentPage,
+    currentPage,
     siblingCount: props.siblingCount,
   });
   const lastPage = paginationRange[paginationRange.length - 1];
   const DOTS = -1;
 
-  if (props.currentPage === 0 || paginationRange.length < 2) {
+  if (currentPage === 0 || paginationRange.length < 2) {
     return null;
   }
 
+  const onPageChange = (page: number) => {
+    setSearchParams((params) => {
+      params.set("pageNumber", page.toString());
+      return params;
+    });
+  };
+
   const onNext = () => {
-    props.onPageChange(props.currentPage + 1);
+    onPageChange(currentPage + 1);
   };
 
   const onPrevious = () => {
-    props.onPageChange(props.currentPage - 1);
+    onPageChange(currentPage - 1);
   };
 
   return (
     <ul className={styles.paginationContainer}>
       <li
         className={classNames(styles.paginationItem, {
-          [styles.disabled]: props.currentPage === 1,
+          [styles.disabled]: currentPage === 1,
         })}
         onClick={onPrevious}
       >
@@ -53,10 +62,10 @@ const Pagination: FC<Props> = (props) => {
         ) : (
           <li
             className={classNames(styles.paginationItem, {
-              [styles.selected]: pageNumber === props.currentPage,
+              [styles.selected]: pageNumber === currentPage,
             })}
             key={"page-" + index}
-            onClick={() => props.onPageChange(pageNumber)}
+            onClick={() => onPageChange(pageNumber)}
           >
             {pageNumber}
           </li>
@@ -65,7 +74,7 @@ const Pagination: FC<Props> = (props) => {
 
       <li
         className={classNames(styles.paginationItem, {
-          [styles.disabled]: props.currentPage === lastPage,
+          [styles.disabled]: currentPage === lastPage,
         })}
         onClick={onNext}
       >
