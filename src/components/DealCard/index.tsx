@@ -1,10 +1,11 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useMemo } from "react";
 import { Deal } from "../../services/models";
 import styles from "./DealCard.module.scss";
 import { truncate } from "../../utils/helper";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { addDeal, removeDeal } from "../../store/reducers/SelectedDealsSlice";
+import classNames from "classnames";
 
 const checkSelected = (deals: Deal[], id: string) => {
   return deals.some((deal) => deal.dealID === id);
@@ -18,17 +19,16 @@ const DealCard: FC<Props> = (props) => {
   const dispatch = useAppDispatch();
   const { deals } = useAppSelector((state) => state.selectedDealsReducer);
 
-  const [isChecked, setIsChecked] = useState(false);
+  const isChecked = useMemo(
+    () => checkSelected(deals, props.deal.dealID),
+    [deals, props.deal.dealID]
+  );
 
   const [searchParams] = useSearchParams();
   const currencyFormat = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   });
-
-  useEffect(() => {
-    setIsChecked(checkSelected(deals, props.deal.dealID));
-  }, [deals, props.deal.dealID]);
 
   const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -49,7 +49,9 @@ const DealCard: FC<Props> = (props) => {
       />
       <Link
         to={`/insxmnea-REACT2024Q3/details?id=${props.deal.dealID}&${searchParams.toString()}`}
-        className={`${styles.card} ${isChecked ? styles.checked : ""}`}
+        className={classNames(styles.card, {
+          [styles.checked]: isChecked,
+        })}
       >
         <div className={styles.thumbContainer}>
           <img className={styles.thumb} src={props.deal.thumb} />

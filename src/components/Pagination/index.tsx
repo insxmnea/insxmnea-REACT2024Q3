@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styles from "./Pagination.module.scss";
 import usePagination from "../../hooks/usePagination";
+import classNames from "classnames";
 
 type Props = {
   totalPageCount: number;
@@ -33,23 +34,27 @@ const Pagination: FC<Props> = (props) => {
   return (
     <ul className={styles.paginationContainer}>
       <li
-        className={`${styles.paginationItem} ${props.currentPage === 1 ? styles.disabled : ""}`}
+        className={classNames(styles.paginationItem, {
+          [styles.disabled]: props.currentPage === 1,
+        })}
         onClick={onPrevious}
       >
-        <div className={`${styles.arrow} ${styles.left}`} />
+        <div className={classNames(styles.arrow, styles.left)} />
       </li>
 
       {paginationRange.map((pageNumber, index) => {
         return pageNumber === DOTS ? (
           <li
-            className={`${styles.paginationItem} ${styles.dots}`}
+            className={classNames(styles.paginationItem, styles.dots)}
             key={"dots-" + index}
           >
             &#8230;
           </li>
         ) : (
           <li
-            className={`${styles.paginationItem} ${pageNumber === props.currentPage ? styles.selected : ""}`}
+            className={classNames(styles.paginationItem, {
+              [styles.selected]: pageNumber === props.currentPage,
+            })}
             key={"page-" + index}
             onClick={() => props.onPageChange(pageNumber)}
           >
@@ -59,10 +64,15 @@ const Pagination: FC<Props> = (props) => {
       })}
 
       <li
-        className={`${styles.paginationItem} ${lastPage === props.currentPage ? styles.disabled : ""}`}
+        className={classNames(styles.paginationItem, {
+          [styles.disabled]: props.currentPage === lastPage,
+        })}
         onClick={onNext}
       >
-        <div className={`${styles.arrow} ${styles.right}`} data-testid="next" />
+        <div
+          className={classNames(styles.arrow, styles.right)}
+          data-testid="next"
+        />
       </li>
     </ul>
   );

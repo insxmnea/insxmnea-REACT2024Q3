@@ -3,6 +3,7 @@ import styles from "./SelectedDealsFlyout.module.scss";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { clearDeals } from "../../store/reducers/SelectedDealsSlice";
 import downloadCSV from "../../utils/downloadCSV";
+import classNames from "classnames";
 
 const SelectedDealsFlyout: FC = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +15,9 @@ const SelectedDealsFlyout: FC = () => {
 
   return (
     <div
-      className={`${styles.wrapper} ${deals.length > 0 ? "" : styles.hidden}`}
+      className={classNames(styles.wrapper, {
+        [styles.hidden]: deals.length === 0,
+      })}
     >
       <button className={styles.button} onClick={handleUnselectAll}>
         Unselect all
