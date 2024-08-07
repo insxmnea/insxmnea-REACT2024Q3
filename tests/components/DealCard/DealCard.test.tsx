@@ -1,11 +1,11 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
-import { Deal } from "../../../src/services/models";
+import { Deal } from "../../../src/entities/deal/types/models";
 import DealCard from "../../../src/components/DealCard";
 import { MemoryRouter } from "react-router-dom";
 import configureStore, { MockStore } from "redux-mock-store";
 import { Provider } from "react-redux";
-import { addDeal } from "../../../src/store/reducers/SelectedDealsSlice";
+import { addDeal } from "../../../src/entities/selected-deals/model/SelectedDealsSlice";
 
 const mockStore = configureStore([]);
 

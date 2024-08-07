@@ -1,0 +1,33 @@
+@use "/src/app/styles/shadows.scss" as *;
+
+.wrapper {
+  position: fixed;
+  padding: 8px;
+  border-radius: 7px;
+  box-sizing: border-box;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--flyout-background);
+  color: var(--text);
+  box-shadow: $shadow;
+  transition: all 0.3s ease-in-out;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hidden {
+  bottom: -100px;
+}
+
+.count {
+  font-size: 13px;
+}
+
+.button {
+  cursor: pointer;
+  font-size: 13px;
+  border: 2px dotted var(--border);
+}

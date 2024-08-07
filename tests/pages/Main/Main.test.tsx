@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
-import Main from "../../../src/pages/Main";
+import { Main } from "../../../src/pages/main";
 
 vi.mock("../../../src/components/SearchBar", () => ({
   default: () => <div>SearchBar Component</div>,
