@@ -1,7 +1,7 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import styles from "./Pagination.module.scss";
 import classNames from "classnames";
-import { useSearchParams } from "react-router-dom";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { usePagination } from "../model/usePagination";
 
 type Props = {
@@ -10,8 +10,10 @@ type Props = {
 };
 
 export const Pagination: FC<Props> = (props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get("pageNumber")) || 1;
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams?.get("pageNumber")) || 1;
 
   const paginationRange = usePagination({
     totalPageCount: props.totalPageCount,
@@ -25,11 +27,15 @@ export const Pagination: FC<Props> = (props) => {
     return null;
   }
 
+  const createQueryString = (page: number) => {
+    const params = new URLSearchParams(searchParams?.toString());
+    params.set("pageNumber", page.toString());
+
+    return params.toString();
+  };
+
   const onPageChange = (page: number) => {
-    setSearchParams((params) => {
-      params.set("pageNumber", page.toString());
-      return params;
-    });
+    router.push(pathname + "?" + createQueryString(page));
   };
 
   const onNext = () => {

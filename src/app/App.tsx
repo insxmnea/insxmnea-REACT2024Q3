@@ -1,10 +1,15 @@
+import { HomePage } from "src/pages/homepage";
 import { Providers } from "./providers";
-import { AppRouter } from "./routers";
+import { FC } from "react";
 
-const App = () => {
+type Props = {
+  children?: React.ReactNode;
+};
+
+const App: FC<Props> = ({ children }) => {
   return (
     <Providers>
-      <AppRouter />
+      <HomePage children={children} />
     </Providers>
   );
 };

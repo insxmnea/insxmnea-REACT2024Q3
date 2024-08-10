@@ -6,11 +6,13 @@ import {
   FC,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import styles from "./SearchBar.module.scss";
 import searchIcon from "src/shared/assets/icons/search.svg";
-import { useSearchParams } from "react-router-dom";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useHistory, useSearchQuery } from "src/features/search";
+import Image from "next/image";
 
 type Props = {};
 
@@ -22,7 +24,9 @@ export const SearchBar: FC<Props> = () => {
   const searchBoxRef: RefObject<HTMLDivElement> = createRef<HTMLDivElement>();
   const inputRef: RefObject<HTMLInputElement> = createRef<HTMLInputElement>();
 
-  const [, setSearchParams] = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,14 +45,21 @@ export const SearchBar: FC<Props> = () => {
     };
   }, [searchBoxRef]);
 
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams?.toString());
+      params.set(name, value);
+      params.set("pageNumber", "1");
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
   const onSearch = async (search: string = "") => {
     updateHistory(search);
 
-    setSearchParams((params) => {
-      params.set("title", search);
-      params.set("pageNumber", "1");
-      return params;
-    });
+    router.push(pathname + "?" + createQueryString("title", search));
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +104,7 @@ export const SearchBar: FC<Props> = () => {
         className={styles.button}
         onClick={() => handleButtonClick(query)}
       >
-        <img src={searchIcon} className={styles.icon} alt="search icon" />
+        <Image src={searchIcon} className={styles.icon} alt="search icon" />
       </button>
 
       {history.length > 0 && showHistory && (

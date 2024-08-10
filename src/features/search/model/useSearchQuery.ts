@@ -4,7 +4,11 @@ const key = "searchQuery";
 
 export const useSearchQuery = () => {
   const [query, setQuery] = useState<string>(() => {
-    return JSON.parse(localStorage.getItem(key) || `""`);
+    if (typeof window !== "undefined") {
+      return JSON.parse(localStorage.getItem(key) || `""`);
+    } else {
+      return "";
+    }
   });
 
   useEffect(() => {

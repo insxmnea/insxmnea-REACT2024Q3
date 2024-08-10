@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useMemo } from "react";
 import styles from "./DealCard.module.scss";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "next/navigation";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/shared/lib/store";
 import { truncate } from "src/shared/lib/helper";
@@ -9,6 +9,7 @@ import {
   addDeal,
   removeDeal,
 } from "src/entities/selected-deals/model/SelectedDealsSlice";
+import Link from "next/link";
 
 const checkSelected = (deals: Deal[], id: string) => {
   return deals.some((deal) => deal.dealID === id);
@@ -25,7 +26,7 @@ export const DealCard: FC<Props> = (props) => {
     [deals, props.dealID]
   );
 
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const currencyFormat = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -49,7 +50,8 @@ export const DealCard: FC<Props> = (props) => {
         onChange={handleCheckboxChange}
       />
       <Link
-        to={`/insxmnea-REACT2024Q3/details?id=${props.dealID}&${searchParams.toString()}`}
+        href={`/details?id=${props.dealID}&${searchParams?.toString()}`}
+        // href={`/insxmnea-REACT2024Q3/details?id=${props.dealID}&${searchParams?.toString()}`}
         className={classNames(styles.card, {
           [styles.checked]: isChecked,
         })}

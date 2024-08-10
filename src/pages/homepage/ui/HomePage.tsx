@@ -5,9 +5,11 @@ import { DealsList } from "src/widgets/deals-list";
 import { ThemeButton } from "src/features/theme";
 import { SearchBar } from "src/widgets/search-bar";
 
-type Props = {};
+type Props = {
+  children?: React.ReactNode;
+};
 
-export const HomePage: FC<Props> = () => {
+export const HomePage: FC<Props> = ({ children }) => {
   return (
     <div>
       <div className={styles.wrapper}>
@@ -19,7 +21,8 @@ export const HomePage: FC<Props> = () => {
 
         <div className={styles.content}>
           <DealsList />
-          <Outlet />
+          {/* <Outlet /> */}
+          {children}
         </div>
       </div>
 

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styles from "./DealsList.module.scss";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "next/navigation";
 import { DealCard } from "src/widgets/deal-card";
 import { Loader } from "src/shared/ui/loader";
 import { Pagination } from "src/features/pagination";
@@ -10,9 +10,9 @@ import { dealsAPI } from "src/entities/deal";
 type Props = {};
 
 export const DealsList: FC<Props> = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = Number(searchParams.get("pageNumber")) || 1;
-  const title = searchParams.get("title") || "";
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams?.get("pageNumber")) || 1;
+  const title = searchParams?.get("title") || "";
 
   const { data, isFetching, isError } = dealsAPI.useGetDealsQuery({
     title: title,

@@ -1,8 +1,9 @@
 import { createRef, FC, RefObject, useEffect } from "react";
 import styles from "./DealDetails.module.scss";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Loader } from "src/shared/ui/loader";
 import { dealsAPI } from "src/entities/deal";
+import { useRouter } from "next/router";
 
 type Props = {};
 
@@ -10,28 +11,20 @@ export const DealDetails: FC<Props> = () => {
   const detailedCardRef: RefObject<HTMLDivElement> =
     createRef<HTMLDivElement>();
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const detailedCardId = searchParams.get("id") || "";
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const detailedCardId = searchParams?.get("id") || "";
 
   const { data, isFetching, isError } = dealsAPI.useGetDealQuery(
     encodeURIComponent(detailedCardId)
   );
 
-  const navigate = useNavigate();
-
   const hideDetailedCard = () => {
-    setSearchParams((params) => {
-      params.delete("id");
-      return params;
-    });
+    const params = new URLSearchParams(searchParams?.toString());
+    params.delete("id");
 
-    navigate(
-      {
-        pathname: "/insxmnea-REACT2024Q3/",
-        search: searchParams.toString(),
-      },
-      { replace: true }
-    );
+    router.push("/?" + params.toString());
   };
 
   const handleClickOutside = (event: MouseEvent) => {
