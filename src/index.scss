@@ -1,5 +1,6 @@
-@import "./constants/colors.scss";
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap");
+@import "app/styles/themes/light.scss";
+@import "app/styles/themes/dark.scss";
 
 * {
   margin: 0;
