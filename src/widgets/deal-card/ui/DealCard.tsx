@@ -51,7 +51,6 @@ export const DealCard: FC<Props> = (props) => {
       />
       <Link
         href={`/details?id=${props.dealID}&${searchParams?.toString()}`}
-        // href={`/insxmnea-REACT2024Q3/details?id=${props.dealID}&${searchParams?.toString()}`}
         className={classNames(styles.card, {
           [styles.checked]: isChecked,
         })}
