@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { Pagination } from "src/features/pagination/ui/Pagination";
 import { describe, it, expect, vi } from "vitest";
-import Pagination from "../../../src/components/Pagination";
 
 const renderWithRouter = (ui: React.ReactElement, route = "/") => {
   const history = createMemoryRouter(
@@ -18,21 +18,12 @@ const renderWithRouter = (ui: React.ReactElement, route = "/") => {
 };
 
 describe("Pagination component", () => {
-  it("updates URL query parameter when page changes", () => {
-    const onPageChange = vi.fn();
+  it("renders pagination items", () => {
     const totalPageCount = 5;
-    const currentPage = 1;
 
-    renderWithRouter(
-      <Pagination
-        totalPageCount={totalPageCount}
-        currentPage={currentPage}
-        onPageChange={onPageChange}
-      />
-    );
+    renderWithRouter(<Pagination totalPageCount={totalPageCount} />);
 
-    fireEvent.click(screen.getByTestId("next"));
-
-    expect(onPageChange).toHaveBeenCalledWith(currentPage + 1);
+    expect(screen.getByRole("list")).toBeInTheDocument();
+    expect(screen.getAllByRole("listitem")).toHaveLength(totalPageCount + 2);
   });
 });

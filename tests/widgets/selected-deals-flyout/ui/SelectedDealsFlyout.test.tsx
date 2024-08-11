@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import configureStore, { MockStore } from "redux-mock-store";
-import SelectedDealsFlyout from "../../../src/components/SelectedDealsFlyout";
 import { Provider } from "react-redux";
+import { SelectedDealsFlyout } from "src/widgets/selected-deals-flyout";
 
 vi.mock("../../hooks/redux", () => ({
   useAppDispatch: vi.fn(),

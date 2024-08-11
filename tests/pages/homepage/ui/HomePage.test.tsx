@@ -1,25 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
+import { HomePage } from "src/pages/homepage";
 import { describe, expect, it, vi } from "vitest";
-import { Main } from "../../../src/pages/main";
 
-vi.mock("../../../src/components/SearchBar", () => ({
-  default: () => <div>SearchBar Component</div>,
+vi.mock("src/widgets/search-bar", () => ({
+  SearchBar: () => <div>SearchBar Component</div>,
 }));
 
-vi.mock("../../../src/components/DealsList", () => ({
-  default: () => <div>DealsList Component</div>,
+vi.mock("src/widgets/deals-list", () => ({
+  DealsList: () => <div>DealsList Component</div>,
 }));
 
-vi.mock("../../../src/components/ThemeButton", () => ({
-  default: () => <div>ThemeButton Component</div>,
+vi.mock("src/features/theme", () => ({
+  ThemeButton: () => <div>ThemeButton Component</div>,
 }));
 
-describe("Main component", () => {
+describe("HomePage component", () => {
   it("renders correctly", () => {
     render(
       <Router>
-        <Main />
+        <HomePage />
       </Router>
     );
 

@@ -104,7 +104,13 @@ export const SearchBar: FC<Props> = () => {
         className={styles.button}
         onClick={() => handleButtonClick(query)}
       >
-        <Image src={searchIcon} className={styles.icon} alt="search icon" />
+        <Image
+          src={searchIcon}
+          width={20}
+          height={20}
+          className={styles.icon}
+          alt="search icon"
+        />
       </button>
 
       {history.length > 0 && showHistory && (

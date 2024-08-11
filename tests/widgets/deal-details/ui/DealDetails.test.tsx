@@ -1,11 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { server } from "../../mocks/server";
 import { http, HttpResponse } from "msw";
 import { beforeAll, afterEach, afterAll, describe, it, expect } from "vitest";
-import { setupStore } from "../../../src/store/store";
-import DealDetails from "../../../src/components/DealDetails";
+import { server } from "../../../mocks/server";
+import { setupStore } from "src/app/store";
+import { DealDetails } from "src/widgets/deal-details";
 
 const renderWithProviders = (ui: React.ReactElement) => {
   const store = setupStore();

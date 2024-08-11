@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
+import { ThemeButton } from "src/features/theme";
 import { describe, expect, it } from "vitest";
-import ThemeButton from "../../../src/components/ThemeButton";
 
 describe("ThemeButton component", () => {
   it("renders correctly with the dark theme", () => {

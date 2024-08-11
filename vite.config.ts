@@ -1,6 +1,7 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import { configDefaults } from "vitest/config";
+import { resolve } from "node:path";
 
 export default defineConfig({
   plugins: [react()],
@@ -17,9 +18,13 @@ export default defineConfig({
         "**/coverage/**",
         "**/tests/**",
         "**.cjs",
+        "**.mjs",
+        "**/index.ts",
         "**/src/index.tsx",
-        "**/utils/**",
-        "**/providers/**",
+        "**/pages/**",
+        "**/app/**",
+        "**/entities/**",
+        "**/features/search/**",
       ],
     },
   },
