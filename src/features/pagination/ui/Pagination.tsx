@@ -35,7 +35,6 @@ export const Pagination: FC<Props> = (props) => {
   };
 
   const onPageChange = (page: number) => {
-    console.log("onPageChange", page);
     router.push(pathname + "?" + createQueryString(page));
   };
 

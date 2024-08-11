@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import styles from "./ThemeButton.module.scss";
 import { useThemeContext } from "src/app/providers/theme-provider";

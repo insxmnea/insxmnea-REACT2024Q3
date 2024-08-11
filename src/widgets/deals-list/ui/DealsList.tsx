@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import styles from "./DealsList.module.scss";
 import { useSearchParams } from "next/navigation";

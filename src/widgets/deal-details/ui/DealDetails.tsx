@@ -1,9 +1,11 @@
+"use client";
+
 import { createRef, FC, RefObject, useEffect } from "react";
 import styles from "./DealDetails.module.scss";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Loader } from "src/shared/ui/loader";
 import { dealsAPI } from "src/entities/deal";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
