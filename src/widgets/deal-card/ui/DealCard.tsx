@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useMemo } from "react";
 import styles from "./DealCard.module.scss";
-import { useSearchParams } from "next/navigation";
+import { Link, useSearchParams } from "@remix-run/react";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/shared/lib/store";
 import { truncate } from "src/shared/lib/helper";
@@ -9,7 +9,6 @@ import {
   addDeal,
   removeDeal,
 } from "src/entities/selected-deals/model/SelectedDealsSlice";
-import Link from "next/link";
 
 const checkSelected = (deals: Deal[], id: string) => {
   return deals.some((deal) => deal.dealID === id);
@@ -50,7 +49,7 @@ export const DealCard: FC<Props> = (props) => {
         onChange={handleCheckboxChange}
       />
       <Link
-        href={`/details?id=${props.dealID}&${searchParams?.toString()}`}
+        to={`/details?id=${props.dealID}&${searchParams[0].toString()}`}
         className={classNames(styles.card, {
           [styles.checked]: isChecked,
         })}

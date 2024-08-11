@@ -2,10 +2,9 @@
 
 import { createRef, FC, RefObject, useEffect } from "react";
 import styles from "./DealDetails.module.scss";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useNavigate, useSearchParams } from "@remix-run/react";
 import { Loader } from "src/shared/ui/loader";
 import { dealsAPI } from "src/entities/deal";
-import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -13,20 +12,27 @@ export const DealDetails: FC<Props> = () => {
   const detailedCardRef: RefObject<HTMLDivElement> =
     createRef<HTMLDivElement>();
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const detailedCardId = searchParams?.get("id") || "";
+  const [searchParams, setSearchParams] = useSearchParams();
+  const detailedCardId = searchParams.get("id") || "";
 
   const { data, isFetching, isError } = dealsAPI.useGetDealQuery(
     encodeURIComponent(detailedCardId)
   );
 
-  const hideDetailedCard = () => {
-    const params = new URLSearchParams(searchParams?.toString());
-    params.delete("id");
+  const navigate = useNavigate();
 
-    router.push("/?" + params.toString());
+  const hideDetailedCard = () => {
+    setSearchParams((params) => {
+      params.delete("id");
+      return params;
+    });
+    navigate(
+      {
+        pathname: "/",
+        search: searchParams.toString(),
+      },
+      { replace: true }
+    );
   };
 
   const handleClickOutside = (event: MouseEvent) => {

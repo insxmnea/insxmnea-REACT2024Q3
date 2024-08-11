@@ -21,7 +21,6 @@ export const HomePage: FC<Props> = ({ children }) => {
 
         <div className={styles.content}>
           <DealsList />
-          {/* <Outlet /> */}
           {children}
         </div>
       </div>

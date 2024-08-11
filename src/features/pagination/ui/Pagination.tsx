@@ -1,7 +1,7 @@
-import { FC, useCallback } from "react";
+import { FC } from "react";
 import styles from "./Pagination.module.scss";
 import classNames from "classnames";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "@remix-run/react";
 import { usePagination } from "../model/usePagination";
 
 type Props = {
@@ -10,10 +10,8 @@ type Props = {
 };
 
 export const Pagination: FC<Props> = (props) => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams?.get("pageNumber")) || 1;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("pageNumber")) || 1;
 
   const paginationRange = usePagination({
     totalPageCount: props.totalPageCount,
@@ -35,7 +33,12 @@ export const Pagination: FC<Props> = (props) => {
   };
 
   const onPageChange = (page: number) => {
-    router.push(pathname + "?" + createQueryString(page));
+    // router.push(pathname + "?" + createQueryString(page));
+
+    setSearchParams((params) => {
+      params.set("pageNumber", page.toString());
+      return params;
+    });
   };
 
   const onNext = () => {

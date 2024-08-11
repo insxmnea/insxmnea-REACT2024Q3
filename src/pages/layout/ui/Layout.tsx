@@ -3,7 +3,6 @@ export const Layout = ({ children }) => {
     <main>
       <header>My Website</header>
       <article>{children}</article>
-      {/*  ^ this is your "<Outlet>" */}
     </main>
   );
 };
