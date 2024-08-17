@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap");
+@import "app/styles/themes/dark.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Fira Code", monospace;
+}
+
+:root {
+  font-weight: 400;
+  font-size: 16px;
+
+  color-scheme: light dark;
+  color: var(--text);
+  background-color: var(--background);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+button {
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--button-background);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.05s ease-in-out;
+}
+button:hover {
+  background-color: var(--button-background-hover);
+}

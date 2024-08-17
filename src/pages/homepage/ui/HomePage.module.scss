@@ -1,0 +1,23 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  min-height: 100vh;
+}
+
+.link {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid var(--border);
+  border-radius: 7px;
+  padding: 12px;
+  background-color: var(--background-secondary);
+  transition: all 0.3s ease;
+  &:hover {
+    background-color: var(--background-secondary-hover);
+  }
+}
