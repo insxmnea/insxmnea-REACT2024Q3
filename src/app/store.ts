@@ -1,6 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import FormInputReducer from "@/entities/form-input/models/FormInputSlice";
 
-const rootReducer = combineReducers({});
+const rootReducer = combineReducers({
+  FormInputReducer,
+});
 
 export const setupStore = () => {
   return configureStore({
