@@ -85,7 +85,7 @@ export const UncontrolledForm: FC = () => {
               ref={nameRef}
               name="name"
               id="name"
-              autoComplete="name-given"
+              autoComplete="off"
             />
             {errors.name && <p className={styles.error}>{errors.name}</p>}
           </div>
@@ -147,7 +147,7 @@ export const UncontrolledForm: FC = () => {
           </div>
 
           <div className={styles.control}>
-            <label>Gender:</label>
+            <label htmlFor="gender">Gender:</label>
             <select name="gender" id="gender" ref={genderRef}>
               <option value="">Select</option>
               <option value="male">Male</option>

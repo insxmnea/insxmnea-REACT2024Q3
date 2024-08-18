@@ -51,7 +51,7 @@ export const ControlledForm: FC = () => {
               type="text"
               {...register("name")}
               id="name"
-              autoComplete="name-given"
+              autoComplete="off"
             />
             {errors.name && (
               <p className={styles.error}>{errors.name.message}</p>
@@ -114,8 +114,8 @@ export const ControlledForm: FC = () => {
           </div>
 
           <div className={styles.control}>
-            <label>Gender:</label>
-            <select {...register("gender")}>
+            <label htmlFor="gender">Gender:</label>
+            <select {...register("gender")} id="gender">
               <option value="">Select</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
