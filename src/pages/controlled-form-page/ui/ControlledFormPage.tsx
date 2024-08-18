@@ -1,6 +1,6 @@
-import { ControlledForm } from "@/widgets/controlled-form";
 import { FC } from "react";
 import styles from "./ControlledFormPage.module.scss";
+import { ControlledForm } from "@/widgets/form";
 
 export const ControlledFormPage: FC = () => {
   return (
