@@ -47,7 +47,12 @@ export const ControlledForm: FC = () => {
         <div className={styles.column}>
           <div className={styles.control}>
             <label htmlFor="name">Name:</label>
-            <input type="text" {...register("name")} id="name" />
+            <input
+              type="text"
+              {...register("name")}
+              id="name"
+              autoComplete="name-given"
+            />
             {errors.name && (
               <p className={styles.error}>{errors.name.message}</p>
             )}
@@ -61,7 +66,12 @@ export const ControlledForm: FC = () => {
 
           <div className={styles.control}>
             <label htmlFor="email">Email:</label>
-            <input type="email" {...register("email")} id="email" />
+            <input
+              type="email"
+              {...register("email")}
+              id="email"
+              autoComplete="email"
+            />
             {errors.email && (
               <p className={styles.error}>{errors.email.message}</p>
             )}
@@ -138,6 +148,7 @@ export const ControlledForm: FC = () => {
           {...register("country")}
           id="country"
           list="country-list"
+          autoComplete="country-name"
         />
 
         <datalist id="country-list">
